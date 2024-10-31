@@ -1,6 +1,6 @@
 package org.youcode.itlens.dto.Owner;
 
-public record EmbeddedDTO(
+public record EmbeddedOwnerDTO(
         Integer id,
         String name
 ) {

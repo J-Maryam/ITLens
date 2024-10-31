@@ -1,6 +1,6 @@
 package org.youcode.itlens.dto.Owner;
 
-public record UpdateDto(
+public record UpdateOwnerDTO(
         String name
 ) {
 }
