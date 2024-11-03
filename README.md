@@ -1,34 +1,27 @@
 
-# ITLens - API REST Survey IT
+# ITLens - API REST Survey IT 🌐
 
-## Table of Contents
-- [Aperçu du Projet](#aperçu-du-projet)
-- [Architecture de l'Application](#architecture-de-lapplication)
-- [Diagramme de Classe](#diagramme-de-classe)
-- [Fonctionnalités](#fonctionnalités)
-- [Prise en Main (Getting Started)](#prise-en-main-getting-started)
-    - [Prérequis](#prérequis)
-    - [Installation](#installation)
-    - [Configuration de la Base de Données](#configuration-de-la-base-de-données)
-    - [Démarrage de l'Application](#démarrage-de-lapplication)
-- [Développement](#développement)
-    - [Structure du Code](#structure-du-code)
-    - [Gestion des DTOs et Mappings](#gestion-des-dtos-et-mappings)
-    - [Gestion des Exceptions](#gestion-des-exceptions)
-- [Tests](#tests)
-- [Documentation de l'API](#documentation-de-lapi)
-- [Annexes](#annexes)
+## Table of Contents 📚
+- 📄 [Aperçu du Projet](#aperçu-du-projet)
+- 🏗️ [Architecture de l'Application](#architecture-de-lapplication)
+- 📊 [Diagramme de Classe](#diagramme-de-classe)
+- ⚙️ [Fonctionnalités](#fonctionnalités)
+- 🚀 [Getting Started](#prise-en-main-getting-started)
+- 🛠️ [Développement](#développement)
+- 🧪 [Tests](#tests)
+- 📜 [Documentation de l'API](#documentation-de-lapi)
+- 📚 [Annexes](#annexes)
 
 ---
 
-## Aperçu du Projet
+## Aperçu du Projet 📄
 **ITLens** est une API REST conçue pour la gestion de sondages dans le domaine IT. Cette application permet de créer et gérer des sondages structurés, d’enregistrer les réponses des utilisateurs, et d’obtenir des statistiques en temps réel. Elle est développée avec Spring Boot et utilise une base de données relationnelle pour la persistance des données.
 
 Les utilisateurs peuvent créer des sondages avec des chapitres et des sous-chapitres, ajouter des questions à choix multiple, puis analyser les résultats des sondages de manière détaillée.
 
 ---
 
-## Architecture de l'Application
+## Architecture de l'Application 🏗️
 Le projet **ITLens** suit une architecture en couches, favorisant la séparation des responsabilités pour une meilleure maintenabilité et évolutivité.
 
 - **Contrôleurs** : Gèrent les requêtes HTTP et orchestrent les appels vers les services.
@@ -38,14 +31,14 @@ Le projet **ITLens** suit une architecture en couches, favorisant la séparation
 
 ---
 
-## Diagramme de Classe
+## Diagramme de Classe 📊
 Le diagramme de classe représente la structure du modèle de données de l'application, comprenant les entités principales et leurs relations.
 
 ![Diagramme de Classe](https://simplonline-v3-prod.s3.eu-west-3.amazonaws.com/media/image/png/itlens-dc-671e96b532997801426173.png)
 
 ---
 
-## Fonctionnalités
+## Fonctionnalités ️️⚙️
 
 - **Gestion des Surveys** : Créer, mettre à jour et supprimer des sondages, chapitres, sous-chapitres et questions.
 - **Participation aux Surveys** : Enregistrer les réponses des utilisateurs à chaque question.
@@ -54,10 +47,10 @@ Le diagramme de classe représente la structure du modèle de données de l'appl
 
 ---
 
-## Getting Started
+## Getting Started 🚀
 
 ### Prérequis
-- **Java 17 ou supérieur**
+- **Java 17 ou supérieur** ☕
 - **Maven** pour la gestion des dépendances (maven 3.9+)
 - **PostgreSQL ou MySQL** pour la base de données
 
@@ -94,7 +87,7 @@ Le diagramme de classe représente la structure du modèle de données de l'appl
 
 ---
 
-## Développement
+## Développement 🛠️
 
 ### Structure du Code
 Le projet est structuré en plusieurs packages principaux :
@@ -124,7 +117,7 @@ L'application utilise `@RestControllerAdvice` pour gérer globalement les except
 
 ---
 
-## Tests
+## Tests 🧪
 
 ### Tests Unitaires et d'Intégration
 - **Tests unitaires** : Utilisation de JUnit et Mockito pour tester les services et la logique métier.
@@ -143,7 +136,7 @@ Les tests couvrent :
 
 ---
 
-## Documentation de l'API
+## Documentation de l'API 📖
 
 La documentation de l'API est générée avec **Swagger**, permettant de visualiser et de tester facilement les différents endpoints.
 
@@ -156,7 +149,7 @@ La documentation de l'API est générée avec **Swagger**, permettant de visuali
 
 ---
 
-## Annexes
+## Annexes 📚
 
 ### Variables d’Environnement pour la Production
 Pour sécuriser les informations sensibles (par exemple, mots de passe de la base de données), il est recommandé d'utiliser des variables d'environnement au lieu de stocker ces informations directement dans le fichier `application.properties`.
@@ -167,7 +160,7 @@ Pour sécuriser les informations sensibles (par exemple, mots de passe de la bas
 
 ---
 
-## Contribution
+## Contribution 🤝
 Les contributions au projet **ITLens** sont les bienvenues. Veuillez suivre les règles suivantes :
 1. Forkez le dépôt.
 2. Créez une branche pour votre fonctionnalité (`feature/ma-fonctionnalité`).
@@ -175,5 +168,5 @@ Les contributions au projet **ITLens** sont les bienvenues. Veuillez suivre les 
 
 ---
 
-## Licence
+## Licence 📜
 Ce projet est sous licence MIT. Veuillez consulter le fichier `LICENSE` pour plus de détails.
