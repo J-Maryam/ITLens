@@ -49,7 +49,9 @@ public class OwnerServiceImpl implements OwnerService {
     }
 
     @Override
-    public void delete(Long aLong) {
-
+    public void delete(Long id) {
+        if(!repository.existsById(id))
+            throw new EntityNotFoundException("Owner with id " + id + " not found");
+        repository.deleteById(id);
     }
 }
