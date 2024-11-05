@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.youcode.itlens.common.application.validation.annotation.Exists;
+import org.youcode.itlens.common.application.validation.annotation.UniqueValue;
 import org.youcode.itlens.owner.domain.Owner;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public class Survey {
     private Long id;
 
     @Column(nullable = false)
+    @UniqueValue(entityClass = Survey.class, fieldName = "title")
     private String title;
 
     @Column(nullable = false)
