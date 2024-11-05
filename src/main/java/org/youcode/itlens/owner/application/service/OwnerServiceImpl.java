@@ -5,8 +5,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.youcode.itlens.owner.application.dto.OwnerRequestDTO;
+import org.youcode.itlens.owner.application.dto.OwnerResponseDTO;
 import org.youcode.itlens.owner.application.mapper.OwnerMapper;
-import org.youcode.itlens.owner.domain.Owner;
 import org.youcode.itlens.owner.domain.OwnerRepository;
 
 import java.util.List;
@@ -17,26 +17,26 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OwnerServiceImpl implements OwnerService {
 
-    private final OwnerRepository ownerRepository;
-    private final OwnerMapper ownerMapper;
+    private final OwnerRepository repository;
+    private final OwnerMapper mapper;
 
     @Override
-    public List<Owner> getAll() {
-        return List.of();
+    public List<OwnerResponseDTO> getAll() {
+        return repository.findAll().stream().map(mapper::toDto).toList();
     }
 
     @Override
-    public Owner getById(Long aLong) {
+    public OwnerResponseDTO getById(Long aLong) {
         return null;
     }
 
     @Override
-    public Owner create(OwnerRequestDTO ownerRequestDTO) {
+    public OwnerResponseDTO create(OwnerRequestDTO ownerRequestDTO) {
         return null;
     }
 
     @Override
-    public Owner update(Long aLong, OwnerRequestDTO ownerRequestDTO) {
+    public OwnerResponseDTO update(Long aLong, OwnerRequestDTO ownerRequestDTO) {
         return null;
     }
 
