@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import org.youcode.itlens.common.application.validation.annotation.Exists;
 import org.youcode.itlens.owner.domain.Owner;
 
 import java.util.List;
@@ -17,6 +18,7 @@ import java.util.List;
 public class Survey {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Exists(entityClass = Survey.class)
     private Long id;
 
     @Column(nullable = false)
