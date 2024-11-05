@@ -15,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 public class Subject {
     @Id
-    private Integer id;
+    private Long id;
 
     @Column(unique=true, nullable=false)
     private String title;

@@ -18,7 +18,7 @@ import java.util.List;
 public class SurveyEdition {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Temporal(TemporalType.DATE)
     @Column(nullable = false)

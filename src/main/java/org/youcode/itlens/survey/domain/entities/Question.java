@@ -15,7 +15,7 @@ import lombok.experimental.Accessors;
 public class Question {
 
     @Id
-    private Integer id;
+    private Long id;
 
     @Column(nullable = false)
     private String text;
