@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
+import org.youcode.itlens.common.domain.exception.EntityNotFoundException;
 import org.youcode.itlens.owner.application.dto.OwnerRequestDTO;
 import org.youcode.itlens.owner.application.dto.OwnerResponseDTO;
 import org.youcode.itlens.owner.application.mapper.OwnerMapper;
@@ -26,8 +27,10 @@ public class OwnerServiceImpl implements OwnerService {
     }
 
     @Override
-    public OwnerResponseDTO getById(Long aLong) {
-        return null;
+    public OwnerResponseDTO getById(Long id) {
+        return repository.findById(id)
+                .map(mapper::toDto)
+                .orElseThrow(() -> new EntityNotFoundException("Owner with id " + id + " not found"));
     }
 
     @Override
