@@ -89,4 +89,21 @@ public class OwnerServiceImplTest {
         verify(repository, times(1)).save(owner);
     }
 
+    @Test
+    void update_ShouldReturnUpdatedOwnerResponseDTO_WhenOwnerExists() {
+        Long id = 1L;
+        OwnerRequestDTO requestDTO = new OwnerRequestDTO("Updated Owner");
+        Owner owner = new Owner();
+        owner.setName("Original Owner");
+        OwnerResponseDTO updatedResponseDTO = new OwnerResponseDTO(id, "Updated Owner", List.of());
+
+        when(repository.findById(id)).thenReturn(Optional.of(owner));
+        when(repository.save(owner)).thenReturn(owner);
+        when(mapper.toDto(owner)).thenReturn(updatedResponseDTO);
+
+        OwnerResponseDTO result = service.update(id, requestDTO);
+
+        assertEquals("Updated Owner", result.name());
+        verify(repository, times(1)).save(owner);
+    }
 }
