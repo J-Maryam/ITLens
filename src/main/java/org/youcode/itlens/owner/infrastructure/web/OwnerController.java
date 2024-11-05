@@ -1,11 +1,11 @@
 package org.youcode.itlens.owner.infrastructure.web;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.youcode.itlens.owner.application.dto.OwnerRequestDTO;
 import org.youcode.itlens.owner.application.dto.OwnerResponseDTO;
 import org.youcode.itlens.owner.application.service.OwnerService;
 
@@ -27,5 +27,11 @@ public class OwnerController {
     public ResponseEntity<OwnerResponseDTO> findById(@PathVariable Long id) {
         OwnerResponseDTO owner = service.getById(id);
         return ResponseEntity.ok(owner);
+    }
+
+    @PostMapping
+    public ResponseEntity<OwnerResponseDTO> create(@RequestBody @Valid OwnerRequestDTO dto) {
+        OwnerResponseDTO newOwner = service.create(dto);
+        return new ResponseEntity<>(newOwner, HttpStatus.CREATED);
     }
 }
