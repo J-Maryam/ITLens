@@ -6,6 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.youcode.itlens.common.domain.exception.EntityNotFoundException;
+import org.youcode.itlens.owner.application.dto.OwnerRequestDTO;
 import org.youcode.itlens.owner.application.dto.OwnerResponseDTO;
 import org.youcode.itlens.owner.application.mapper.OwnerMapper;
 import org.youcode.itlens.owner.domain.Owner;
@@ -70,4 +71,22 @@ public class OwnerServiceImplTest {
         verify(repository, times(1)).findById(id);
         verify(mapper, never()).toDto(any());
     }
+
+    @Test
+    void create_ShouldReturnOwnerResponseDTO_WhenOwnerIsCreated() {
+        OwnerRequestDTO requestDTO = new OwnerRequestDTO("Test Owner");
+        Owner owner = new Owner();
+        owner.setName("Test Owner");
+        OwnerResponseDTO ownerResponseDTO = new OwnerResponseDTO(1L, "Test Owner", List.of());
+
+        when(mapper.toEntity(requestDTO)).thenReturn(owner);
+        when(repository.save(owner)).thenReturn(owner);
+        when(mapper.toDto(owner)).thenReturn(ownerResponseDTO);
+
+        OwnerResponseDTO result = service.create(requestDTO);
+
+        assertEquals("Test Owner", result.name());
+        verify(repository, times(1)).save(owner);
+    }
+
 }
