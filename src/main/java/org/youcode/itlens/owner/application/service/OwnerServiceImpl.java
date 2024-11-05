@@ -8,6 +8,7 @@ import org.youcode.itlens.common.domain.exception.EntityNotFoundException;
 import org.youcode.itlens.owner.application.dto.OwnerRequestDTO;
 import org.youcode.itlens.owner.application.dto.OwnerResponseDTO;
 import org.youcode.itlens.owner.application.mapper.OwnerMapper;
+import org.youcode.itlens.owner.domain.Owner;
 import org.youcode.itlens.owner.domain.OwnerRepository;
 
 import java.util.List;
@@ -35,7 +36,8 @@ public class OwnerServiceImpl implements OwnerService {
 
     @Override
     public OwnerResponseDTO create(OwnerRequestDTO ownerRequestDTO) {
-        return null;
+        Owner owner = mapper.toEntity(ownerRequestDTO);
+        return mapper.toDto((repository.save(owner)));
     }
 
     @Override
