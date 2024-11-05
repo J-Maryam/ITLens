@@ -3,6 +3,7 @@ package org.youcode.itlens.owner.infrastructure.web;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.youcode.itlens.owner.application.dto.OwnerResponseDTO;
@@ -20,5 +21,11 @@ public class OwnerController {
     public ResponseEntity<List<OwnerResponseDTO>> findAll() {
         List<OwnerResponseDTO> owners = service.getAll();
         return ResponseEntity.ok(owners);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<OwnerResponseDTO> findById(@PathVariable Long id) {
+        OwnerResponseDTO owner = service.getById(id);
+        return ResponseEntity.ok(owner);
     }
 }
