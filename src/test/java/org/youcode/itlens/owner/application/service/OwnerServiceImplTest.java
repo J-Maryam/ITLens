@@ -5,6 +5,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.youcode.itlens.common.domain.exception.EntityNotFoundException;
 import org.youcode.itlens.owner.application.dto.OwnerResponseDTO;
 import org.youcode.itlens.owner.application.mapper.OwnerMapper;
 import org.youcode.itlens.owner.domain.Owner;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -56,5 +58,16 @@ public class OwnerServiceImplTest {
         assertEquals("Test Owner", result.name());
         verify(repository, times(1)).findById(id);
         verify(mapper, times(1)).toDto(owner);
+    }
+
+    @Test
+    void getById_ShouldThrowEntityNotFoundException_WhenOwnerDoesNotExist() {
+        Long id = 1L;
+        when(repository.findById(id)).thenReturn(Optional.empty());
+
+        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> service.getById(id));
+        assertEquals("Owner with id 1 not found", exception.getMessage());
+        verify(repository, times(1)).findById(id);
+        verify(mapper, never()).toDto(any());
     }
 }
