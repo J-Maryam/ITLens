@@ -106,4 +106,15 @@ public class OwnerServiceImplTest {
         assertEquals("Updated Owner", result.name());
         verify(repository, times(1)).save(owner);
     }
+
+    @Test
+    void update_ShouldThrowEntityNotFoundException_WhenOwnerDoesNotExist() {
+        Long id = 1L;
+        OwnerRequestDTO requestDTO = new OwnerRequestDTO("Updated Owner");
+        when(repository.findById(id)).thenReturn(Optional.empty());
+
+        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> service.update(id, requestDTO));
+        assertEquals("Owner with id 1 not found", exception.getMessage());
+        verify(repository, never()).save(any());
+    }
 }
