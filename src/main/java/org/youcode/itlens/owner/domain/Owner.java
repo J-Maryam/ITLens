@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import org.youcode.itlens.common.application.validation.annotation.UniqueValue;
 import org.youcode.itlens.survey.domain.entities.Survey;
 
 import java.util.List;
@@ -21,7 +22,8 @@ public class Owner {
     private Long id;
 
     @NotBlank
-    @Column(unique=true)
+    @UniqueValue(entityClass = Owner.class, fieldName = "name")
+    @Column(unique=true, nullable=false)
     private String name;
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
