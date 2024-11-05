@@ -11,6 +11,7 @@ import org.youcode.itlens.owner.domain.Owner;
 import org.youcode.itlens.owner.domain.OwnerRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -41,4 +42,19 @@ public class OwnerServiceImplTest {
         verify(mapper, times(1)).toDto(owner);
     }
 
+    @Test
+    void getById_ShouldReturnOwnerResponseDTO_WhenOwnerExists() {
+        Long id = 1L;
+        Owner owner = new Owner();
+        OwnerResponseDTO ownerResponseDTO = new OwnerResponseDTO(id, "Test Owner", List.of());
+        when(repository.findById(id)).thenReturn(Optional.of(owner));
+        when(mapper.toDto(owner)).thenReturn(ownerResponseDTO);
+
+        OwnerResponseDTO result = service.getById(id);
+
+        assertEquals(id, result.id());
+        assertEquals("Test Owner", result.name());
+        verify(repository, times(1)).findById(id);
+        verify(mapper, times(1)).toDto(owner);
+    }
 }
