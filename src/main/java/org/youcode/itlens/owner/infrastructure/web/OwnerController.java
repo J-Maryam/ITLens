@@ -40,4 +40,10 @@ public class OwnerController {
         OwnerResponseDTO updatedOwner = service.update(id, dto);
         return ResponseEntity.ok(updatedOwner);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<OwnerResponseDTO> delete(@PathVariable Long id) {
+        service.delete(id);
+        return ResponseEntity.noContent().build();
+    }
 }
