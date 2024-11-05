@@ -34,4 +34,10 @@ public class OwnerController {
         OwnerResponseDTO newOwner = service.create(dto);
         return new ResponseEntity<>(newOwner, HttpStatus.CREATED);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<OwnerResponseDTO> update(@PathVariable Long id, @RequestBody @Valid OwnerRequestDTO dto) {
+        OwnerResponseDTO updatedOwner = service.update(id, dto);
+        return ResponseEntity.ok(updatedOwner);
+    }
 }
