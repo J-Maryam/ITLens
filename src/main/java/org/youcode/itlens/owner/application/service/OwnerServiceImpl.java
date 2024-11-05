@@ -41,8 +41,11 @@ public class OwnerServiceImpl implements OwnerService {
     }
 
     @Override
-    public OwnerResponseDTO update(Long aLong, OwnerRequestDTO ownerRequestDTO) {
-        return null;
+    public OwnerResponseDTO update(Long id, OwnerRequestDTO ownerRequestDTO) {
+        Owner owner = repository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Owner with id " + id + " not found"));
+        owner.setName(ownerRequestDTO.name());
+        return mapper.toDto(repository.save(owner));
     }
 
     @Override
