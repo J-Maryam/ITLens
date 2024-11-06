@@ -13,6 +13,7 @@ import org.youcode.itlens.survey.domain.entities.Survey;
 import org.youcode.itlens.survey.domain.repository.SurveyRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -51,4 +52,21 @@ class SurveyServiceImplTest {
         verify(mapper, times(1)).toEntity(request);
         verify(mapper, times(1)).toDto(survey);
     }
+
+    @Test
+    void shouldGetSurveyByIdWhenExists() {
+        Owner owner = new Owner(1L, "Owner Name", List.of());
+        Long surveyId = 1L;
+        Survey survey = new Survey(surveyId, "Survey Title", "Survey Description", owner, List.of());
+        SurveyResponseDto expectedResponse = new SurveyResponseDto(surveyId, "Survey Title", "Survey Description", null, List.of());
+
+        when(surveyRepository.findById(surveyId)).thenReturn(Optional.of(survey));
+        when(mapper.toDto(survey)).thenReturn(expectedResponse);
+
+        SurveyResponseDto response = surveyService.getById(surveyId);
+
+        assertEquals(expectedResponse, response);
+        verify(surveyRepository, times(1)).findById(surveyId);
+    }
+
 }
