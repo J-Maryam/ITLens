@@ -1,15 +1,31 @@
 package org.youcode.itlens.survey.application.service.Impl;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 import org.youcode.itlens.survey.application.dto.request.SurveyRequestDto;
 import org.youcode.itlens.survey.application.dto.response.SurveyResponseDto;
+import org.youcode.itlens.survey.application.mapper.SurveyMapper;
 import org.youcode.itlens.survey.application.service.SurveyService;
+import org.youcode.itlens.survey.domain.entities.Survey;
+import org.youcode.itlens.survey.domain.repository.SurveyRepository;
 
 import java.util.List;
 
+@Service
+@RequiredArgsConstructor
+@Transactional
+@Validated
 public class SurveyServiceImpl implements SurveyService {
+
+    private final SurveyRepository repository;
+    private final SurveyMapper mapper;
+
     @Override
     public List<SurveyResponseDto> getAll() {
-        return List.of();
+        List<Survey> surveys = repository.findAll();
+        return surveys.stream().map(mapper::toDto).toList();
     }
 
     @Override
