@@ -27,5 +27,5 @@ public class SurveyController {
     @GetMapping("/{id}")
     public ResponseEntity<SurveyResponseDto> findById(@PathVariable Long id) {
         SurveyResponseDto survey = service.getById(id);
-        return ResponseEntity.ok(surveyg);
+        return ResponseEntity.ok(survey);
     }}
