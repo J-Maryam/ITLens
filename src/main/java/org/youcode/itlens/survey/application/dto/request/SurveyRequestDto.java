@@ -3,20 +3,23 @@ package org.youcode.itlens.survey.application.dto.request;
 import jakarta.persistence.Column;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import org.youcode.itlens.common.application.validation.annotation.Exists;
 import org.youcode.itlens.common.application.validation.annotation.UniqueValue;
 import org.youcode.itlens.owner.domain.Owner;
 import org.youcode.itlens.survey.domain.entities.Survey;
 
 public record SurveyRequestDto(
-        @Column(nullable = false)
-        @UniqueValue(entityClass = Survey.class, fieldName = "title")
+        @NotBlank
+        @UniqueValue(entityClass = Survey.class, fieldName = "title", message = "survey title already exists")
         String title,
 
-        @Column(nullable = false)
+        @NotBlank
         String description,
 
-        @ManyToOne
-        @JoinColumn(name = "owner_id")
-        Owner owner
+        @NotNull
+        @Exists(entityClass = Owner.class, message = "owner id does not exists")
+        Long owner
 ) {
 }
