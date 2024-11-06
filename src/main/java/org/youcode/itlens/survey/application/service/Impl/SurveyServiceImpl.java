@@ -65,7 +65,10 @@ public class SurveyServiceImpl implements SurveyService {
 
 
     @Override
-    public void delete(Long aLong) {
-
+    public void delete(Long id) {
+        if (!repository.existsById(id)) {
+            throw new EntityNotFoundException("Survey with Id " + id + " not found");
+        }
+        repository.deleteById(id);
     }
 }

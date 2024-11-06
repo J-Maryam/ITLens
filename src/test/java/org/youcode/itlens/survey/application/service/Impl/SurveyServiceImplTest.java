@@ -112,10 +112,9 @@ class SurveyServiceImplTest {
     void shouldDeleteSurveySuccessfully() {
         Long surveyId = 1L;
 
+        when(surveyRepository.existsById(surveyId)).thenReturn(true);
         doNothing().when(surveyRepository).deleteById(surveyId);
-
         surveyService.delete(surveyId);
-
         verify(surveyRepository, times(1)).deleteById(surveyId);
     }
 
