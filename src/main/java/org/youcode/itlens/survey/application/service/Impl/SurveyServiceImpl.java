@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
+import org.youcode.itlens.common.domain.exception.EntityNotFoundException;
 import org.youcode.itlens.survey.application.dto.request.SurveyRequestDto;
 import org.youcode.itlens.survey.application.dto.response.SurveyResponseDto;
 import org.youcode.itlens.survey.application.mapper.SurveyMapper;
@@ -29,8 +30,9 @@ public class SurveyServiceImpl implements SurveyService {
     }
 
     @Override
-    public SurveyResponseDto getById(Long aLong) {
-        return null;
+    public SurveyResponseDto getById(Long id) {
+        Survey survey = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Survey with Id" + id + "not found"));
+        return mapper.toDto(survey);
     }
 
     @Override
