@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -67,6 +68,16 @@ class SurveyServiceImplTest {
 
         assertEquals(expectedResponse, response);
         verify(surveyRepository, times(1)).findById(surveyId);
+        verify(mapper, times(1)).toDto(survey);
     }
 
+    @Test
+    void shouldThrowExceptionWhenSurveyNotFoundById() {
+        Long surveyId = 1L;
+
+        when(surveyRepository.findById(surveyId)).thenReturn(Optional.empty());
+
+        assertThrows(RuntimeException.class, () -> surveyService.getById(surveyId));
+        verify(surveyRepository, times(1)).findById(surveyId);
+    }
 }
