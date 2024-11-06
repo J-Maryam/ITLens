@@ -1,11 +1,13 @@
 package org.youcode.itlens.survey.domain.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -17,7 +19,7 @@ public class Subject {
     @Id
     private Long id;
 
-    @Column(unique=true, nullable=false)
+    @NotBlank
     private String title;
 
     @ManyToOne
@@ -25,6 +27,9 @@ public class Subject {
 
     @ManyToOne
     private Subject parentSubject;
+
+    @OneToMany(mappedBy = "parentSubject")
+    private List<Subject> subSubjects;
 
     @OneToMany
     private List<Question> questions;
