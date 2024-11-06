@@ -103,4 +103,15 @@ class SurveyServiceImplTest {
         verify(mapper, times(1)).toEntity(request);
         verify(mapper, times(1)).toDto(updatedSurvey);
     }
+
+    @Test
+    void shouldDeleteSurveySuccessfully() {
+        Long surveyId = 1L;
+
+        doNothing().when(surveyRepository).deleteById(surveyId);
+
+        surveyService.delete(surveyId);
+
+        verify(surveyRepository, times(1)).deleteById(surveyId);
+    }
 }
