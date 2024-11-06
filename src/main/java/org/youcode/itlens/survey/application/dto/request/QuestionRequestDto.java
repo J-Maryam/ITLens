@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.youcode.itlens.common.application.validation.annotation.Exists;
-import org.youcode.itlens.survey.domain.entities.QuestionType;
+import org.youcode.itlens.survey.domain.entities.enums.QuestionType;
 import org.youcode.itlens.survey.domain.entities.Subject;
 
 public record QuestionRequestDto(
@@ -17,6 +17,6 @@ public record QuestionRequestDto(
 
         @NotNull
         @Exists(entityClass = Subject.class)
-        Long subject
+        Long subjectId
 ) {
 }

@@ -20,6 +20,6 @@ public record SurveyRequestDto(
 
         @NotNull
         @Exists(entityClass = Owner.class, message = "owner id does not exists")
-        Long owner
+        Long ownerId
 ) {
 }
