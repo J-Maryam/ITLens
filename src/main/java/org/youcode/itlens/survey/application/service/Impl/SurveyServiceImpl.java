@@ -37,7 +37,9 @@ public class SurveyServiceImpl implements SurveyService {
 
     @Override
     public SurveyResponseDto create(SurveyRequestDto surveyRequestDto) {
-        return null;
+        Survey survey = mapper.toEntity(surveyRequestDto);
+        survey = repository.save(survey);
+        return mapper.toDto(survey);
     }
 
     @Override
