@@ -32,12 +32,12 @@ class SurveyServiceImplTest {
 
     @Test
     void shouldCreateSurveySuccessfully() {
-        Owner owner = new Owner(); // Assurez-vous d'initialiser Owner avec les informations nécessaires
-        owner.setId(1L); // Exemples d'initialisation, selon votre structure
-        owner.setName("Owner Name");
+        Owner owner = new Owner(1L, "Owner Name", List.of());
 
         SurveyRequestDto request = new SurveyRequestDto("Survey Title", "Survey Description", owner.getId());
+
         Survey survey = new Survey(1L, "Survey Title", "Survey Description", owner, List.of());
+
         SurveyResponseDto expectedResponse = new SurveyResponseDto(1L, "Survey Title", "Survey Description", null, List.of());
 
         when(mapper.toEntity(request)).thenReturn(survey);
