@@ -1,6 +1,10 @@
 package org.youcode.itlens.survey.domain.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,15 +24,16 @@ public class SurveyEdition {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Temporal(TemporalType.DATE)
-    @Column(nullable = false)
+    @PastOrPresent(message = "La date de création doit être dans le passé ou aujourd'hui.")
+    @NotNull
     private LocalDate creationDate;
 
-    @Temporal(TemporalType.DATE)
-    @Column(nullable = false)
+    @Future(message = "La date de début doit être dans le futur.")
+    @NotNull
     private LocalDate startDate;
 
-    @Column(nullable = false)
+    @NotNull
+    @FutureOrPresent
     private int year;
 
     @ManyToOne
