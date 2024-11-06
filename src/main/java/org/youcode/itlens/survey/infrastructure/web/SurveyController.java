@@ -42,4 +42,10 @@ public class SurveyController {
         SurveyResponseDto updatedSurvey = service.update(id, dto);
         return ResponseEntity.ok(updatedSurvey);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<SurveyResponseDto> delete(@PathVariable Long id) {
+        service.delete(id);
+        return ResponseEntity.noContent().build();
+    }
 }
