@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
+import org.youcode.itlens.common.domain.exception.ConflictException;
 import org.youcode.itlens.common.domain.exception.EntityNotFoundException;
 import org.youcode.itlens.owner.application.service.OwnerService;
 import org.youcode.itlens.owner.application.service.OwnerServiceImpl;
@@ -42,6 +43,12 @@ public class SurveyServiceImpl implements SurveyService {
 
     @Override
     public SurveyResponseDto create(SurveyRequestDto surveyRequestDto) {
+        if (repository.existsByTitle(surveyRequestDto.title()))
+            throw new ConflictException("Survey title already exists");
+        if (!ownerRepository.existsById(surveyRequestDto.ownerId())) {
+            throw new EntityNotFoundException("Owner with Id " + surveyRequestDto.ownerId() + " not found");
+        }
+
         Survey survey = mapper.toEntity(surveyRequestDto);
         survey = repository.save(survey);
         return mapper.toDto(survey);
@@ -54,6 +61,9 @@ public class SurveyServiceImpl implements SurveyService {
         Owner owner = ownerRepository.findById(requestDto.ownerId())
                 .orElseThrow(() -> new EntityNotFoundException("Owner with id " + requestDto.ownerId() + " not found"));
 
+        if (repository.existsByTitle(requestDto.title()))
+            throw new ConflictException("Survey title already exists");
+
         existingSurvey.setTitle(requestDto.title())
                 .setDescription(requestDto.description())
                 .setOwner(owner);
@@ -62,7 +72,6 @@ public class SurveyServiceImpl implements SurveyService {
 
         return mapper.toDto(existingSurvey);
     }
-
 
     @Override
     public void delete(Long id) {

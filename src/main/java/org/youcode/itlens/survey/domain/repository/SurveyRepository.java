@@ -6,4 +6,5 @@ import org.youcode.itlens.survey.domain.entities.Survey;
 
 @Repository
 public interface SurveyRepository extends JpaRepository<Survey, Long> {
+    boolean existsByTitle(String title);
 }

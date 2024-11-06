@@ -1,12 +1,13 @@
 package org.youcode.itlens.survey.infrastructure.web;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.youcode.itlens.owner.application.dto.OwnerRequestDTO;
 import org.youcode.itlens.owner.application.dto.OwnerResponseDTO;
+import org.youcode.itlens.survey.application.dto.request.SurveyRequestDto;
 import org.youcode.itlens.survey.application.dto.response.SurveyResponseDto;
 import org.youcode.itlens.survey.application.service.SurveyService;
 
@@ -28,4 +29,17 @@ public class SurveyController {
     public ResponseEntity<SurveyResponseDto> findById(@PathVariable Long id) {
         SurveyResponseDto survey = service.getById(id);
         return ResponseEntity.ok(survey);
-    }}
+    }
+
+    @PostMapping
+    public ResponseEntity<SurveyResponseDto> create(@RequestBody @Valid SurveyRequestDto dto) {
+        SurveyResponseDto newSurvey = service.create(dto);
+        return new ResponseEntity<>(newSurvey, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<SurveyResponseDto> update(@PathVariable Long id, @RequestBody @Valid SurveyRequestDto dto) {
+        SurveyResponseDto updatedSurvey = service.update(id, dto);
+        return ResponseEntity.ok(updatedSurvey);
+    }
+}
