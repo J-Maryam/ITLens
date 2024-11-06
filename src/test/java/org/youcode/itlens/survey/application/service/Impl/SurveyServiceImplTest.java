@@ -80,4 +80,27 @@ class SurveyServiceImplTest {
         assertThrows(RuntimeException.class, () -> surveyService.getById(surveyId));
         verify(surveyRepository, times(1)).findById(surveyId);
     }
+
+    @Test
+    void shouldUpdateSurveySuccessfully() {
+        Owner owner = new Owner(1L, "Owner Name", List.of());
+        Long surveyId = 1L;
+        SurveyRequestDto request = new SurveyRequestDto("Updated Title", "Updated Description", owner.getId());
+        Survey survey = new Survey(surveyId, "Survey Title", "Survey Description", owner, List.of());
+        Survey updatedSurvey = new Survey(surveyId, "Updated Title", "Updated Description", owner, List.of());
+        SurveyResponseDto expectedResponse = new SurveyResponseDto(surveyId, "Updated Title", "Updated Description", null, List.of());
+
+        when(surveyRepository.findById(surveyId)).thenReturn(Optional.of(survey));
+        when(mapper.toEntity(request)).thenReturn(updatedSurvey);
+        when(surveyRepository.save(any(Survey.class))).thenReturn(updatedSurvey);
+        when(mapper.toDto(updatedSurvey)).thenReturn(expectedResponse);
+
+        SurveyResponseDto response = surveyService.update(surveyId, request);
+
+        assertEquals(expectedResponse, response);
+        verify(surveyRepository, times(1)).findById(surveyId);
+        verify(surveyRepository, times(1)).save(updatedSurvey);
+        verify(mapper, times(1)).toEntity(request);
+        verify(mapper, times(1)).toDto(updatedSurvey);
+    }
 }
