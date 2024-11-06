@@ -1,6 +1,7 @@
 package org.youcode.itlens.survey.domain.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,14 +20,13 @@ import java.util.List;
 public class Survey {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Exists(entityClass = Survey.class)
     private Long id;
 
-    @Column(nullable = false)
-    @UniqueValue(entityClass = Survey.class, fieldName = "title")
+    @NotBlank
+    @Column(unique = true)
     private String title;
 
-    @Column(nullable = false)
+    @NotBlank
     private String description;
 
     @ManyToOne
