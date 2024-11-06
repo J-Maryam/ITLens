@@ -5,6 +5,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.youcode.itlens.common.domain.exception.EntityNotFoundException;
 import org.youcode.itlens.owner.domain.Owner;
 import org.youcode.itlens.owner.domain.OwnerRepository;
 import org.youcode.itlens.survey.application.dto.request.SurveyRequestDto;
@@ -116,6 +117,16 @@ class SurveyServiceImplTest {
         doNothing().when(surveyRepository).deleteById(surveyId);
         surveyService.delete(surveyId);
         verify(surveyRepository, times(1)).deleteById(surveyId);
+    }
+
+    @Test
+    void shouldThrowExceptionWhenSurveyNotFound() {
+        Long surveyId = 1L;
+
+        when(surveyRepository.existsById(surveyId)).thenReturn(false);
+        assertThrows(EntityNotFoundException.class, () -> {
+            surveyService.delete(surveyId);
+        });
     }
 
     @Test
