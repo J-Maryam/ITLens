@@ -1,6 +1,7 @@
 package org.youcode.itlens.survey.application.dto.response;
 
-import org.youcode.itlens.survey.application.dto.request.SubjectRequestDto;
+import org.youcode.itlens.survey.application.dto.embeddable.SubjectEmbeddableDto;
+import org.youcode.itlens.survey.application.dto.embeddable.SurveyEmbeddableDto;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -10,7 +11,7 @@ public record SurveyEditionResponseDto(
         LocalDate creationDate,
         LocalDate startDate,
         int year,
-        SurveyResponseDto survey,
-        List<SubjectRequestDto> subjects
+        SurveyEmbeddableDto survey,
+        List<SubjectEmbeddableDto> subjects
 ) {
 }
