@@ -6,6 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.youcode.itlens.owner.domain.Owner;
+import org.youcode.itlens.owner.domain.OwnerRepository;
 import org.youcode.itlens.survey.application.dto.request.SurveyRequestDto;
 import org.youcode.itlens.survey.application.dto.response.SurveyResponseDto;
 import org.youcode.itlens.survey.application.mapper.SurveyMapper;
@@ -25,6 +26,9 @@ class SurveyServiceImplTest {
 
     @Mock
     private SurveyRepository surveyRepository;
+
+    @Mock
+    private OwnerRepository ownerRepository;
 
     @Mock
     private SurveyMapper mapper;
@@ -90,8 +94,8 @@ class SurveyServiceImplTest {
         Survey updatedSurvey = new Survey(surveyId, "Updated Title", "Updated Description", owner, List.of());
         SurveyResponseDto expectedResponse = new SurveyResponseDto(surveyId, "Updated Title", "Updated Description", null, List.of());
 
+        when(ownerRepository.findById(owner.getId())).thenReturn(Optional.of(owner));
         when(surveyRepository.findById(surveyId)).thenReturn(Optional.of(survey));
-        when(mapper.toEntity(request)).thenReturn(updatedSurvey);
         when(surveyRepository.save(any(Survey.class))).thenReturn(updatedSurvey);
         when(mapper.toDto(updatedSurvey)).thenReturn(expectedResponse);
 
@@ -100,8 +104,8 @@ class SurveyServiceImplTest {
         assertEquals(expectedResponse, response);
         verify(surveyRepository, times(1)).findById(surveyId);
         verify(surveyRepository, times(1)).save(updatedSurvey);
-        verify(mapper, times(1)).toEntity(request);
         verify(mapper, times(1)).toDto(updatedSurvey);
+        verify(ownerRepository, times(1)).findById(owner.getId());
     }
 
     @Test
