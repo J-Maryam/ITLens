@@ -6,8 +6,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.youcode.itlens.common.domain.exception.ConflictException;
 import org.youcode.itlens.common.domain.exception.EntityNotFoundException;
-import org.youcode.itlens.owner.application.service.OwnerService;
-import org.youcode.itlens.owner.application.service.OwnerServiceImpl;
 import org.youcode.itlens.owner.domain.Owner;
 import org.youcode.itlens.owner.domain.OwnerRepository;
 import org.youcode.itlens.survey.application.dto.request.SurveyRequestDto;
