@@ -32,6 +32,16 @@ public class SubjectServiceImpl implements SubjectService {
                 .toList();
     }
 
+    public List<SubjectResponseDto> findAllBySurveyEdition(Long surveyEditionId) {
+        if (surveyEditionRepository.existsById(surveyEditionId))
+            throw new IllegalArgumentException("SurveyEdition with Id " + surveyEditionId + " not found");
+
+        List<Subject> subjects = repository.findAllBySurveyEditionId(surveyEditionId);
+        return subjects.stream()
+                .map(mapper::toDto)
+                .toList();
+    }
+
     @Override
     public SubjectResponseDto getById(Long aLong) {
         return null;
