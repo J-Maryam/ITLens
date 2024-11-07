@@ -1,11 +1,12 @@
 package org.youcode.itlens.survey.infrastructure.web;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.youcode.itlens.survey.application.dto.request.SurveyEditionRequestDto;
+import org.youcode.itlens.survey.application.dto.request.SurveyRequestDto;
 import org.youcode.itlens.survey.application.dto.response.SurveyEditionResponseDto;
 import org.youcode.itlens.survey.application.dto.response.SurveyResponseDto;
 import org.youcode.itlens.survey.application.service.SurveyEditionService;
@@ -28,5 +29,11 @@ public class SurveyEditionController {
     public ResponseEntity<SurveyEditionResponseDto> findById(@PathVariable Long id) {
         SurveyEditionResponseDto surveyEdition = service.getById(id);
         return ResponseEntity.ok(surveyEdition);
+    }
+
+    @PostMapping
+    public ResponseEntity<SurveyEditionResponseDto> create(@RequestBody @Valid SurveyEditionRequestDto dto) {
+        SurveyEditionResponseDto newSurveyEdition = service.create(dto);
+        return new ResponseEntity<>(newSurveyEdition, HttpStatus.CREATED);
     }
 }
