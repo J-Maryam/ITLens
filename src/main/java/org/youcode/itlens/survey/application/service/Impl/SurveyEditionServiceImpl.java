@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.youcode.itlens.survey.application.dto.request.SurveyEditionRequestDto;
 import org.youcode.itlens.survey.application.dto.response.SurveyEditionResponseDto;
+import org.youcode.itlens.survey.application.mapper.SurveyEditionMapper;
 import org.youcode.itlens.survey.application.service.SurveyEditionService;
 import org.youcode.itlens.survey.domain.repository.SurveyEditionRepository;
 
@@ -18,10 +19,13 @@ import java.util.List;
 public class SurveyEditionServiceImpl implements SurveyEditionService {
 
     private final SurveyEditionRepository repository;
+    private final SurveyEditionMapper mapper;
 
     @Override
     public List<SurveyEditionResponseDto> getAll() {
-        return List.of();
+        return repository.findAll().stream()
+                .map(mapper::toDto)
+                .toList();
     }
 
     @Override
