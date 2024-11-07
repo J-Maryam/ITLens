@@ -52,8 +52,18 @@ public class SurveyEditionServiceImpl implements SurveyEditionService {
     }
 
     @Override
-    public SurveyEditionResponseDto update(Long aLong, SurveyEditionRequestDto surveyEditionRequestDto) {
-        return null;
+    public SurveyEditionResponseDto update(Long id, SurveyEditionRequestDto requestDto) {
+        SurveyEdition existingSurveyEdition = repository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Survey Edition with Id " + id + "not found"));
+        Survey survey = surveyRepository.findById(requestDto.surveyId())
+                .orElseThrow(() -> new EntityNotFoundException("Survey with Id " + requestDto.surveyId() + " not found"));
+
+        existingSurveyEdition.setCreationDate(requestDto.creationDate())
+                .setStartDate(requestDto.startDate())
+                .setYear(requestDto.year())
+                .setSurvey(survey);
+        repository.save(existingSurveyEdition);
+        return mapper.toDto(existingSurveyEdition);
     }
 
     @Override
