@@ -43,8 +43,9 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     @Override
-    public SubjectResponseDto getById(Long aLong) {
-        return null;
+    public SubjectResponseDto getById(Long id) {
+        return repository.findById(id).map(mapper::toDto)
+                .orElseThrow(() -> new IllegalArgumentException("Subject with id " + id + " not found"));
     }
 
     @Override
