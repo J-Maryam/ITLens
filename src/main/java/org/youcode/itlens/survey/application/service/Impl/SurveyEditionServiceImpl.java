@@ -1,0 +1,46 @@
+package org.youcode.itlens.survey.application.service.Impl;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
+import org.youcode.itlens.survey.application.dto.request.SurveyEditionRequestDto;
+import org.youcode.itlens.survey.application.dto.response.SurveyEditionResponseDto;
+import org.youcode.itlens.survey.application.service.SurveyEditionService;
+import org.youcode.itlens.survey.domain.repository.SurveyEditionRepository;
+
+import java.util.List;
+
+@Service
+@Transactional
+@Validated
+@RequiredArgsConstructor
+public class SurveyEditionServiceImpl implements SurveyEditionService {
+
+    private final SurveyEditionRepository repository;
+
+    @Override
+    public List<SurveyEditionResponseDto> getAll() {
+        return List.of();
+    }
+
+    @Override
+    public SurveyEditionResponseDto getById(Long aLong) {
+        return null;
+    }
+
+    @Override
+    public SurveyEditionResponseDto create(SurveyEditionRequestDto surveyEditionRequestDto) {
+        return null;
+    }
+
+    @Override
+    public SurveyEditionResponseDto update(Long aLong, SurveyEditionRequestDto surveyEditionRequestDto) {
+        return null;
+    }
+
+    @Override
+    public void delete(Long aLong) {
+
+    }
+}
