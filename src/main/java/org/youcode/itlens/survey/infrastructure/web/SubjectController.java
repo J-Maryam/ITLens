@@ -31,4 +31,10 @@ public class SubjectController {
         List<SubjectResponseDto> surveys = service.getAll();
         return ResponseEntity.ok(surveys);
     }
+
+    @GetMapping("/survey-editions/{surveyEditionId}/subjects")
+    public ResponseEntity<List<SubjectResponseDto>> getAllSubjectsBySurveyEdition(@PathVariable Long surveyEditionId) {
+        List<SubjectResponseDto> subjects = service.findAllBySurveyEdition(surveyEditionId);
+        return ResponseEntity.ok(subjects);
+    }
 }

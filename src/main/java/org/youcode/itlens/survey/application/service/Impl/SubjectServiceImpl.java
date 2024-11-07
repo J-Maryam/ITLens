@@ -35,7 +35,7 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     public List<SubjectResponseDto> findAllBySurveyEdition(Long surveyEditionId) {
-        if (surveyEditionRepository.existsById(surveyEditionId))
+        if (!surveyEditionRepository.existsById(surveyEditionId))
             throw new EntityNotFoundException("SurveyEdition with Id " + surveyEditionId + " not found");
 
         List<Subject> subjects = repository.findAllBySurveyEditionId(surveyEditionId);
