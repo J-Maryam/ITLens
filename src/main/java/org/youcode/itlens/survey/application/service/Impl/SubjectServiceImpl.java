@@ -72,8 +72,21 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     @Override
-    public SubjectResponseDto update(Long aLong, SubjectRequestDto subjectRequestDto) {
-        return null;
+    public SubjectResponseDto update(Long id, SubjectRequestDto requestDto) {
+        Subject existingSubject = repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Subject with Id " + id + " not found"));
+
+        SurveyEdition surveyEdition = surveyEditionRepository.findById(requestDto.surveyEditionId())
+                .orElseThrow(() -> new IllegalArgumentException("SurveyEdition with Id " + requestDto.surveyEditionId() + " not found"));
+
+        boolean titleExists = repository.existsByTitleAndSurveyEdition(requestDto.title(), surveyEdition);
+        if (titleExists && !existingSubject.getTitle().equals(requestDto.title())) {
+            throw new IllegalArgumentException("A Subject with title '" + requestDto.title() + "' already exists in this SurveyEdition.");
+        }
+        existingSubject.setTitle(requestDto.title())
+                .setSurveyEdition(surveyEdition);
+        existingSubject = repository.save(existingSubject);
+        return mapper.toDto(existingSubject);
     }
 
     @Override
