@@ -6,9 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.youcode.itlens.survey.application.dto.request.SurveyEditionRequestDto;
-import org.youcode.itlens.survey.application.dto.request.SurveyRequestDto;
 import org.youcode.itlens.survey.application.dto.response.SurveyEditionResponseDto;
-import org.youcode.itlens.survey.application.dto.response.SurveyResponseDto;
 import org.youcode.itlens.survey.application.service.SurveyEditionService;
 
 import java.util.List;
@@ -35,5 +33,11 @@ public class SurveyEditionController {
     public ResponseEntity<SurveyEditionResponseDto> create(@RequestBody @Valid SurveyEditionRequestDto dto) {
         SurveyEditionResponseDto newSurveyEdition = service.create(dto);
         return new ResponseEntity<>(newSurveyEdition, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<SurveyEditionResponseDto> update(@PathVariable Long id, @RequestBody @Valid SurveyEditionRequestDto dto) {
+        SurveyEditionResponseDto updatedSurveyEdition = service.update(id, dto);
+        return ResponseEntity.ok(updatedSurveyEdition);
     }
 }

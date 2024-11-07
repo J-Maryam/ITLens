@@ -54,7 +54,7 @@ public class SurveyEditionServiceImpl implements SurveyEditionService {
     @Override
     public SurveyEditionResponseDto update(Long id, SurveyEditionRequestDto requestDto) {
         SurveyEdition existingSurveyEdition = repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Survey Edition with Id " + id + "not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Survey Edition with Id " + id + " not found"));
         Survey survey = surveyRepository.findById(requestDto.surveyId())
                 .orElseThrow(() -> new EntityNotFoundException("Survey with Id " + requestDto.surveyId() + " not found"));
 
@@ -69,7 +69,7 @@ public class SurveyEditionServiceImpl implements SurveyEditionService {
     @Override
     public void delete(Long id) {
         if (!repository.existsById(id))
-            throw new EntityNotFoundException("Survey Edition with Id " + id + "not found");
+            throw new EntityNotFoundException("Survey Edition with Id " + id + " not found");
         repository.deleteById(id);
     }
 }
