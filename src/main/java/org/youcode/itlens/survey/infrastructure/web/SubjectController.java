@@ -49,4 +49,10 @@ public class SubjectController {
         SubjectResponseDto updated = service.update(id, requestDto);
         return ResponseEntity.ok(updated);
     }
+
+    @DeleteMapping("/subjects/{id}")
+    public ResponseEntity<SubjectResponseDto> delete(@PathVariable Long id) {
+        service.delete(id);
+        return ResponseEntity.noContent().build();
+    }
 }

@@ -94,7 +94,7 @@ public class SubjectServiceImpl implements SubjectService {
 
     @Override
     public void delete(Long id) {
-        if (repository.existsById(id)) throw new EntityNotFoundException("Subject with id " + id + " not found");
+        if (!repository.existsById(id)) throw new EntityNotFoundException("Subject with id " + id + " not found");
         repository.deleteById(id);
     }
 }
