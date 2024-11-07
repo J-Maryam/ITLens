@@ -5,8 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.youcode.itlens.owner.application.dto.OwnerRequestDTO;
-import org.youcode.itlens.owner.application.dto.OwnerResponseDTO;
 import org.youcode.itlens.survey.application.dto.request.SurveyRequestDto;
 import org.youcode.itlens.survey.application.dto.response.SurveyResponseDto;
 import org.youcode.itlens.survey.application.service.SurveyService;
@@ -44,7 +42,7 @@ public class SurveyController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<SurveyResponseDto> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
     }

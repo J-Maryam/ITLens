@@ -37,7 +37,7 @@ public class SurveyServiceImpl implements SurveyService {
 
     @Override
     public SurveyResponseDto getById(Long id) {
-        Survey survey = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Survey with Id" + id + "not found"));
+        Survey survey = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Survey with Id " + id + " not found"));
         return mapper.toDto(survey);
     }
 
@@ -45,11 +45,12 @@ public class SurveyServiceImpl implements SurveyService {
     public SurveyResponseDto create(SurveyRequestDto surveyRequestDto) {
         if (repository.existsByTitle(surveyRequestDto.title()))
             throw new ConflictException("Survey title already exists");
-        if (!ownerRepository.existsById(surveyRequestDto.ownerId())) {
-            throw new EntityNotFoundException("Owner with Id " + surveyRequestDto.ownerId() + " not found");
-        }
+
+        Owner owner = ownerRepository.findById(surveyRequestDto.ownerId())
+                .orElseThrow(() -> new EntityNotFoundException("Owner with Id " + surveyRequestDto.ownerId() + " not found"));
 
         Survey survey = mapper.toEntity(surveyRequestDto);
+        survey.setOwner(owner);
         survey = repository.save(survey);
         return mapper.toDto(survey);
     }

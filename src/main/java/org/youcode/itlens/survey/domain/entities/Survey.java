@@ -2,18 +2,15 @@ package org.youcode.itlens.survey.domain.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.Accessors;
-import org.youcode.itlens.common.application.validation.annotation.Exists;
-import org.youcode.itlens.common.application.validation.annotation.UniqueValue;
 import org.youcode.itlens.owner.domain.Owner;
 
 import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
 @Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
@@ -33,7 +30,6 @@ public class Survey {
     @JoinColumn(name = "owner_id")
     private Owner owner;
 
-    @OneToMany
-    @JoinColumn(name = "survey_edition_id")
+    @OneToMany(mappedBy = "survey", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<SurveyEdition> surveyEditions;
 }

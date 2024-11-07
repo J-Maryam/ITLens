@@ -37,6 +37,7 @@ public class SurveyEdition {
     private int year;
 
     @ManyToOne
+    @JoinColumn(name = "survey_id")
     private Survey survey;
 
     @OneToMany
