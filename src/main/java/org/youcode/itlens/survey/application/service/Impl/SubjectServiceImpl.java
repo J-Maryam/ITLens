@@ -27,7 +27,9 @@ public class SubjectServiceImpl implements SubjectService {
 
     @Override
     public List<SubjectResponseDto> getAll() {
-        return List.of();
+        return repository.findAll()
+                .stream().map(mapper::toDto)
+                .toList();
     }
 
     @Override
