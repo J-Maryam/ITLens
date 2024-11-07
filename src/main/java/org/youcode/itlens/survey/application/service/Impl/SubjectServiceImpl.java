@@ -56,7 +56,7 @@ public class SubjectServiceImpl implements SubjectService {
                 .orElseThrow(() -> new EntityNotFoundException("SurveyEdition with Id" + requestDto.surveyEditionId() + " not found"));
 
         boolean titleExists = repository.existsByTitleAndSurveyEdition(requestDto.title(), surveyEdition);
-        if (!titleExists) {
+        if (titleExists) {
             throw new EntityCreationException("Subject with title '" + requestDto.title() + "' already exists in this SurveyEdition.");
         }
 
