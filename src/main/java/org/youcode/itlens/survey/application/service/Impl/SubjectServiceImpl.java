@@ -40,6 +40,11 @@ public class SubjectServiceImpl implements SubjectService {
         SurveyEdition surveyEdition = surveyEditionRepository.findById(requestDto.surveyEditionId())
                 .orElseThrow(() -> new IllegalArgumentException("SurveyEdition with Id" + requestDto.surveyEditionId() + " not found"));
 
+        boolean titleExists = repository.existsByTitleAndSurveyEdition(requestDto.title(), surveyEdition);
+        if (!titleExists) {
+            throw new IllegalArgumentException("Subject with title '" + requestDto.title() + "' already exists in this SurveyEdition.");
+        }
+
         Subject parentSubject = null;
 
         Subject subject = mapper.toEntity(requestDto)
