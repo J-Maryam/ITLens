@@ -9,7 +9,11 @@ import org.youcode.itlens.survey.application.dto.request.SurveyEditionRequestDto
 import org.youcode.itlens.survey.application.dto.response.SurveyEditionResponseDto;
 import org.youcode.itlens.survey.application.mapper.SurveyEditionMapper;
 import org.youcode.itlens.survey.application.service.SurveyEditionService;
+import org.youcode.itlens.survey.application.service.SurveyService;
+import org.youcode.itlens.survey.domain.entities.Survey;
+import org.youcode.itlens.survey.domain.entities.SurveyEdition;
 import org.youcode.itlens.survey.domain.repository.SurveyEditionRepository;
+import org.youcode.itlens.survey.domain.repository.SurveyRepository;
 
 import java.util.List;
 
@@ -21,6 +25,7 @@ public class SurveyEditionServiceImpl implements SurveyEditionService {
 
     private final SurveyEditionRepository repository;
     private final SurveyEditionMapper mapper;
+    private final SurveyRepository surveyRepository;
 
     @Override
     public List<SurveyEditionResponseDto> getAll() {
@@ -37,8 +42,13 @@ public class SurveyEditionServiceImpl implements SurveyEditionService {
     }
 
     @Override
-    public SurveyEditionResponseDto create(SurveyEditionRequestDto surveyEditionRequestDto) {
-        return null;
+    public SurveyEditionResponseDto create(SurveyEditionRequestDto requestDto) {
+        Survey survey = surveyRepository.findById(requestDto.surveyId())
+                .orElseThrow(() -> new EntityNotFoundException("Survey with Id " + requestDto.surveyId() + " not found"));
+        SurveyEdition surveyEdition = mapper.toEntity(requestDto)
+                .setSurvey(survey);
+        surveyEdition = repository.save(surveyEdition);
+        return mapper.toDto(surveyEdition);
     }
 
     @Override
