@@ -67,7 +67,9 @@ public class SurveyEditionServiceImpl implements SurveyEditionService {
     }
 
     @Override
-    public void delete(Long aLong) {
-
+    public void delete(Long id) {
+        if (!repository.existsById(id))
+            throw new EntityNotFoundException("Survey Edition with Id " + id + "not found");
+        repository.deleteById(id);
     }
 }
