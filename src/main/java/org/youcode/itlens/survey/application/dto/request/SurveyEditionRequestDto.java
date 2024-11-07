@@ -22,7 +22,7 @@ public record SurveyEditionRequestDto(
         int year,
 
         @NotNull
-        @Exists(entityClass = Survey.class, message = "no parent subject with this id")
+        @Exists(entityClass = Survey.class, message = "no survey with this id")
         Long surveyId
 ) {
 }

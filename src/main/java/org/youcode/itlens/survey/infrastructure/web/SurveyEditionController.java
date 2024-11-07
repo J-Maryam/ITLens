@@ -5,9 +5,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.youcode.itlens.common.application.validation.annotation.Exists;
 import org.youcode.itlens.survey.application.dto.request.SurveyEditionRequestDto;
 import org.youcode.itlens.survey.application.dto.response.SurveyEditionResponseDto;
 import org.youcode.itlens.survey.application.service.SurveyEditionService;
+import org.youcode.itlens.survey.domain.entities.SurveyEdition;
 
 import java.util.List;
 
@@ -39,5 +41,11 @@ public class SurveyEditionController {
     public ResponseEntity<SurveyEditionResponseDto> update(@PathVariable Long id, @RequestBody @Valid SurveyEditionRequestDto dto) {
         SurveyEditionResponseDto updatedSurveyEdition = service.update(id, dto);
         return ResponseEntity.ok(updatedSurveyEdition);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        service.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }
