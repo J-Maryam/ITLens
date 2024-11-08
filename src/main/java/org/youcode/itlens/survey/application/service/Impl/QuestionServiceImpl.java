@@ -35,8 +35,9 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public QuestionResponseDto getById(Long aLong) {
-        return null;
+    public QuestionResponseDto getById(Long id) {
+        return repository.findById(id).map(mapper::toDto)
+                .orElseThrow(() -> new EntityNotFoundException("Question with Id " + id + " not found"));
     }
 
     @Override
