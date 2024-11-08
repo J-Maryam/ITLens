@@ -33,8 +33,10 @@ public class AnswerServiceImpl implements AnswerService {
     }
 
     @Override
-    public AnswerResponseDto getById(Long aLong) {
-        return null;
+    public AnswerResponseDto getById(Long id) {
+        return repository.findById(id)
+                .map(mapper::toDto)
+                .orElseThrow(() -> new EntityNotFoundException("Answer with Id " + id + " not found"));
     }
 
     @Override
