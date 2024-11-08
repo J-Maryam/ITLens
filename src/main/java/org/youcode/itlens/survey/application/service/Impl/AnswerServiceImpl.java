@@ -47,8 +47,17 @@ public class AnswerServiceImpl implements AnswerService {
     }
 
     @Override
-    public AnswerResponseDto update(Long aLong, AnswerRequestDto answerRequestDto) {
-        return null;
+    public AnswerResponseDto update(Long id, AnswerRequestDto requestDto) {
+        Answer answer = repository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Answer with Id " + id + " not found"));
+
+        Question question = questionRepository.findById(requestDto.questionId())
+                .orElseThrow(() -> new EntityNotFoundException("Question with Id " + requestDto.questionId() + " not found"));
+
+        answer.setText(requestDto.text())
+                .setQuestion(question);
+        answer = repository.save(answer);
+        return mapper.toDto(answer);
     }
 
     @Override
