@@ -61,7 +61,8 @@ public class AnswerServiceImpl implements AnswerService {
     }
 
     @Override
-    public void delete(Long aLong) {
-
+    public void delete(Long id) {
+        if (!repository.existsById(id)) throw new EntityNotFoundException("Answer with Id " + id + " not found");
+        repository.deleteById(id);
     }
 }
