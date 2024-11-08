@@ -22,6 +22,12 @@ public class QuestionController {
         return ResponseEntity.ok(questions);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<QuestionResponseDto> getById(@PathVariable Long id) {
+        QuestionResponseDto question = service.getById(id);
+        return ResponseEntity.ok((question));
+    }
+
     @PostMapping
     public ResponseEntity<QuestionResponseDto> create(@RequestBody @Valid QuestionRequestDto requestDto) {
         QuestionResponseDto create = service.create(requestDto);
