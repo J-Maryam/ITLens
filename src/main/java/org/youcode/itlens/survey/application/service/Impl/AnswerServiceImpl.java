@@ -27,7 +27,9 @@ public class AnswerServiceImpl implements AnswerService {
 
     @Override
     public List<AnswerResponseDto> getAll() {
-        return List.of();
+        return repository.findAll()
+                .stream().map(mapper::toDto)
+                .toList();
     }
 
     @Override
