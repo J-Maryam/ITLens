@@ -45,7 +45,7 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public QuestionResponseDto create(QuestionRequestDto requestDto) {
         Subject subject = subjectRepository.findById(requestDto.subjectId())
-                .orElseThrow(() -> new EntityNotFoundException("Subject with Id" + requestDto.subjectId() + " not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Subject with Id " + requestDto.subjectId() + " not found"));
 
         if (!subject.getSubSubjects().isEmpty()){
             throw new SubjectHasSubSubjectsException("Cannot add a question directly to a Subject with SubSubjects. Please add the question to a specific SubSubject.");
@@ -67,7 +67,7 @@ public class QuestionServiceImpl implements QuestionService {
                 .orElseThrow(() -> new EntityNotFoundException("Question with Id " + id + " not found"));
 
         Subject subject = subjectRepository.findById(requestDto.subjectId())
-                .orElseThrow(() -> new EntityNotFoundException("Subject with Id" + requestDto.subjectId() + " not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Subject with Id " + requestDto.subjectId() + " not found"));
 
         if (!subject.getSubSubjects().isEmpty()) {
             throw new SubjectHasSubSubjectsException("Cannot update the question directly on a Subject with SubSubjects. Please choose a specific SubSubject.");

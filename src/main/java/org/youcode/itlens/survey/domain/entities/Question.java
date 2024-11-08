@@ -28,6 +28,7 @@ public class Question {
     private Integer answerCount = 0;
 
     @Enumerated(EnumType.STRING)
+    @NotBlank
     private QuestionType questionType;
 
     @ManyToOne
