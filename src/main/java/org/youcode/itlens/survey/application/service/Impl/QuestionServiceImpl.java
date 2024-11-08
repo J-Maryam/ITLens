@@ -64,7 +64,8 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public void delete(Long aLong) {
-
+    public void delete(Long id) {
+        if (!repository.existsById(id)) throw new EntityNotFoundException("Question with Id" + id + " not found");
+        repository.deleteById(id);
     }
 }
