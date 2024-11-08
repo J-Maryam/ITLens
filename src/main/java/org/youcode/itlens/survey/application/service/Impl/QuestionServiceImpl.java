@@ -6,11 +6,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.youcode.itlens.common.domain.exception.EntityNotFoundException;
+import org.youcode.itlens.common.domain.exception.SubjectHasSubSubjectsException;
 import org.youcode.itlens.survey.application.dto.request.QuestionRequestDto;
 import org.youcode.itlens.survey.application.dto.response.QuestionResponseDto;
 import org.youcode.itlens.survey.application.mapper.QuestionMapper;
 import org.youcode.itlens.survey.application.service.QuestionService;
 import org.youcode.itlens.survey.application.service.SubjectService;
+import org.youcode.itlens.survey.domain.entities.Question;
 import org.youcode.itlens.survey.domain.entities.Subject;
 import org.youcode.itlens.survey.domain.repository.QuestionRepository;
 import org.youcode.itlens.survey.domain.repository.SubjectRepository;
@@ -25,7 +27,7 @@ public class QuestionServiceImpl implements QuestionService {
 
     private final QuestionRepository repository;
     private final SubjectRepository subjectRepository;
-    private QuestionMapper mapper;
+    private final QuestionMapper mapper;
 
     @Override
     public List<QuestionResponseDto> getAll() {
@@ -39,7 +41,21 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public QuestionResponseDto create(QuestionRequestDto requestDto) {
-        return null;
+        Subject subject = subjectRepository.findById(requestDto.subjectId())
+                .orElseThrow(() -> new EntityNotFoundException("Subject with Id" + requestDto.subjectId() + " not found"));
+
+        if (!subject.getSubSubjects().isEmpty()){
+            throw new SubjectHasSubSubjectsException("Cannot add a question directly to a Subject with SubSubjects. Please add the question to a specific SubSubject.");
+        }
+
+//        boolean questionExists = repository.existsByTextAndSubject(requestDto.getText(), subject);
+//        if (questionExists) {
+//            throw new EntityExistsException("A question with the same text already exists for this subject.");
+//        }
+        Question question = mapper.toEntity(requestDto);
+        question.setSubject(subject);
+        question = repository.save(question);
+        return mapper.toDto(question);
     }
 
     @Override
