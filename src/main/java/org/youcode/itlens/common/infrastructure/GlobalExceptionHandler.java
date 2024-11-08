@@ -8,10 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.youcode.itlens.common.domain.ErrorResponse;
-import org.youcode.itlens.common.domain.exception.BadRequestException;
-import org.youcode.itlens.common.domain.exception.ConflictException;
-import org.youcode.itlens.common.domain.exception.EntityCreationException;
-import org.youcode.itlens.common.domain.exception.EntityNotFoundException;
+import org.youcode.itlens.common.domain.exception.*;
 
 import java.time.LocalDateTime;
 
@@ -40,6 +37,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BadRequestException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<ErrorResponse> handleBadRequestException(BadRequestException ex) {
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
+    @ExceptionHandler(SubjectHasSubSubjectsException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ErrorResponse> handleBadRequestException(SubjectHasSubSubjectsException ex) {
         return buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
