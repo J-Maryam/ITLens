@@ -62,8 +62,22 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public QuestionResponseDto update(Long aLong, QuestionRequestDto questionRequestDto) {
-        return null;
+    public QuestionResponseDto update(Long id, QuestionRequestDto requestDto) {
+        Question question = repository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Question with Id " + id + " not found"));
+
+        Subject subject = subjectRepository.findById(requestDto.subjectId())
+                .orElseThrow(() -> new EntityNotFoundException("Subject with Id" + requestDto.subjectId() + " not found"));
+
+        if (!subject.getSubSubjects().isEmpty()) {
+            throw new SubjectHasSubSubjectsException("Cannot update the question directly on a Subject with SubSubjects. Please choose a specific SubSubject.");
+        }
+
+        question.setText(requestDto.text())
+                .setSubject(subject)
+                .setQuestionType(requestDto.questionType());
+        question = repository.save(question);
+        return mapper.toDto(question);
     }
 
     @Override
