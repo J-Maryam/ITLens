@@ -19,4 +19,10 @@ public class QuestionController {
         QuestionResponseDto create = service.create(requestDto);
         return ResponseEntity.ok(create);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<QuestionResponseDto> update(@PathVariable Long id, @RequestBody @Valid QuestionRequestDto requestDto) {
+        QuestionResponseDto update = service.update(id, requestDto);
+        return  ResponseEntity.ok(update);
+    }
 }
