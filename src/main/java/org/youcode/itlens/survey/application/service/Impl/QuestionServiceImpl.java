@@ -31,7 +31,9 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public List<QuestionResponseDto> getAll() {
-        return List.of();
+        return repository.findAll()
+                .stream().map(mapper::toDto)
+                .toList();
     }
 
     @Override
