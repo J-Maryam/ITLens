@@ -33,4 +33,10 @@ public class AnswerController {
         AnswerResponseDto created = service.create(requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<AnswerResponseDto> update(@PathVariable Long id, @RequestBody AnswerRequestDto requestDto) {
+        AnswerResponseDto updated = service.update(id, requestDto);
+        return ResponseEntity.ok(updated);
+    }
 }
