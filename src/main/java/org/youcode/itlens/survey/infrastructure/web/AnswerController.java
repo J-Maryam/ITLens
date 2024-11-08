@@ -1,5 +1,6 @@
 package org.youcode.itlens.survey.infrastructure.web;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,13 +30,13 @@ public class AnswerController {
     }
 
     @PostMapping
-    public ResponseEntity<AnswerResponseDto> create(AnswerRequestDto requestDto) {
+    public ResponseEntity<AnswerResponseDto> create(@RequestBody @Valid AnswerRequestDto requestDto) {
         AnswerResponseDto created = service.create(requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<AnswerResponseDto> update(@PathVariable Long id, @RequestBody AnswerRequestDto requestDto) {
+    public ResponseEntity<AnswerResponseDto> update(@PathVariable Long id, @RequestBody @Valid AnswerRequestDto requestDto) {
         AnswerResponseDto updated = service.update(id, requestDto);
         return ResponseEntity.ok(updated);
     }

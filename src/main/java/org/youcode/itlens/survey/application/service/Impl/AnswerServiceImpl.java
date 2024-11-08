@@ -1,4 +1,4 @@
-package org.youcode.itlens.survey.application.service.Impl;
+package org.youcode.itlens.survey.application.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,7 +28,8 @@ public class AnswerServiceImpl implements AnswerService {
     @Override
     public List<AnswerResponseDto> getAll() {
         return repository.findAll()
-                .stream().map(mapper::toDto)
+                .stream()
+                .map(mapper::toDto)
                 .toList();
     }
 
@@ -66,7 +67,9 @@ public class AnswerServiceImpl implements AnswerService {
 
     @Override
     public void delete(Long id) {
-        if (!repository.existsById(id)) throw new EntityNotFoundException("Answer with Id " + id + " not found");
+        if (!repository.existsById(id)) {
+            throw new EntityNotFoundException("Answer with Id " + id + " not found");
+        }
         repository.deleteById(id);
     }
 }
