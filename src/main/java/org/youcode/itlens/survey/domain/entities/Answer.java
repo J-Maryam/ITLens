@@ -22,4 +22,8 @@ public class Answer {
 
     @ManyToOne(cascade = CascadeType.ALL)
     private Question question;
+
+    public void incrementSelectionCount() {
+        this.selectionCount++;
+    }
 }
