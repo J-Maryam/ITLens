@@ -7,11 +7,17 @@ import org.springframework.validation.annotation.Validated;
 import org.youcode.itlens.common.domain.exception.EntityNotFoundException;
 import org.youcode.itlens.survey.application.dto.request.answerResponse.*;
 import org.youcode.itlens.survey.application.dto.response.QuestionResponseDto;
+import org.youcode.itlens.survey.application.dto.response.SurveyEditionResponseDto;
 import org.youcode.itlens.survey.application.service.QuestionService;
+import org.youcode.itlens.survey.application.service.SurveyEditionService;
 import org.youcode.itlens.survey.application.service.SurveyParticipationService;
 import org.youcode.itlens.survey.domain.entities.Answer;
+import org.youcode.itlens.survey.domain.entities.SurveyEdition;
+import org.youcode.itlens.survey.domain.entities.enums.QuestionType;
 import org.youcode.itlens.survey.domain.repository.AnswerRepository;
+import org.youcode.itlens.survey.domain.repository.SurveyEditionRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -22,14 +28,35 @@ public class SurveyParticipationServiceImpl implements SurveyParticipationServic
 
     private final QuestionService questionService;
     private final AnswerRepository answerRepository;
+    private final SurveyEditionService surveyEditionService;
 
     @Override
-    public void participate(String surveyId, SurveyParticipationRequest request) {
+    public void participate(Long surveyEditionId, SurveyParticipationRequest request) {
+        if (request == null || request.responses() == null || request.responses().isEmpty()) {
+            throw new IllegalArgumentException("Request or responses must not be null or empty.");
+        }
+
+        SurveyEditionResponseDto surveyEdition = findSurveyEditionBySurveyId(surveyEditionId);
+        validateSurveyEditionDate(surveyEdition);
+
         request.responses().forEach(responseDTO -> {
             Long questionId = extractQuestionId(responseDTO);
-            QuestionResponseDto question = findQuestionById(questionId) ;
+            QuestionResponseDto question = findQuestionById(questionId);
             processResponse(responseDTO, question);
         });
+    }
+
+    private SurveyEditionResponseDto findSurveyEditionBySurveyId(Long surveyEditionId) {
+        return surveyEditionService.getById(surveyEditionId);
+    }
+
+    private void validateSurveyEditionDate(SurveyEditionResponseDto surveyEdition) {
+        LocalDate now = LocalDate.now();
+        LocalDate endDate = LocalDate.of(surveyEdition.year(), 12, 31);
+
+        if (now.isBefore(surveyEdition.startDate()) && now.isAfter(endDate)) {
+            throw new IllegalArgumentException("Participation is only allowed during the active period of the survey edition.");
+        }
     }
 
     private Long extractQuestionId(ResponseDTO responseDTO) {
@@ -44,12 +71,14 @@ public class SurveyParticipationServiceImpl implements SurveyParticipationServic
     }
 
     private void processResponse(ResponseDTO responseDTO, QuestionResponseDto question) {
-        if (responseDTO instanceof SingleAnswerResponseDTO singleAnswer) {
+        if (question.questionType() == QuestionType.SINGLE_CHOICE && responseDTO instanceof SingleAnswerResponseDTO singleAnswer) {
             saveSingleAnswerResponse(singleAnswer);
-        } else if (responseDTO instanceof MultipleAnswersResponseDTO multipleAnswer) {
+        } else if (question.questionType() == QuestionType.MULTIPLE_CHOICE && responseDTO instanceof MultipleAnswersResponseDTO multipleAnswer) {
             saveMultipleAnswersResponse(multipleAnswer);
         } else if (responseDTO instanceof RangeAnswerResponseDTO rangeAnswer) {
             saveRangeAnswerResponse(rangeAnswer);
+        } else {
+            throw new IllegalArgumentException("Invalid response type for question type: " + question.questionType());
         }
     }
 
@@ -72,6 +101,9 @@ public class SurveyParticipationServiceImpl implements SurveyParticipationServic
         long endId = Long.parseLong(rangeParts[1]);
 
         List<Answer> answers = answerRepository.findAllByIdInRange(startId, endId);
+        if (answers.size() != (endId - startId + 1)) {
+            throw new EntityNotFoundException("One or more answers in the specified range were not found.");
+        }
         answers.forEach(this::incrementAndSaveAnswer);
     }
 
@@ -88,7 +120,12 @@ public class SurveyParticipationServiceImpl implements SurveyParticipationServic
 
     private void validateRangeFormat(String[] rangeParts) {
         if (rangeParts.length != 2) {
-            throw new EntityNotFoundException("Invalid range format.");
+            throw new IllegalArgumentException("Invalid range format.");
+        }
+        long startId = Long.parseLong(rangeParts[0]);
+        long endId = Long.parseLong(rangeParts[1]);
+        if (startId > endId) {
+            throw new IllegalArgumentException("Start ID must be less than or equal to End ID in range.");
         }
     }
 
