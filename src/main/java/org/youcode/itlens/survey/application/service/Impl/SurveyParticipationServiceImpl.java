@@ -31,7 +31,15 @@ public class SurveyParticipationServiceImpl implements SurveyParticipationServic
         });
     }
 
-
+    private void processResponse(ResponseDTO responseDTO, Question question) {
+        if (responseDTO instanceof SingleAnswerResponseDTO singleAnswer) {
+            saveSingleAnswerResponse(singleAnswer);
+        }else if (responseDTO instanceof MultipleAnswersResponseDTO multipleAnswer) {
+            saveMultipleAnswersResponse(multipleAnswer);
+        }else if (responseDTO instanceof RangeAnswerResponseDTO rangeAnswer) {
+            saveRangeAnswerResponse(rangeAnswer);
+        }
+    }
 
     private void saveSingleAnswerResponse(SingleAnswerResponseDTO responseDTO) {
         Question question = questionRepository.findById(responseDTO.questionId())
