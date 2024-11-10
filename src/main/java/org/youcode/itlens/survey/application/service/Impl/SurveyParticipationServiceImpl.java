@@ -6,14 +6,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.youcode.itlens.common.domain.exception.EntityNotFoundException;
 import org.youcode.itlens.survey.application.dto.request.answerResponse.*;
+import org.youcode.itlens.survey.application.dto.response.QuestionResponseDto;
+import org.youcode.itlens.survey.application.service.QuestionService;
 import org.youcode.itlens.survey.application.service.SurveyParticipationService;
 import org.youcode.itlens.survey.domain.entities.Answer;
-import org.youcode.itlens.survey.domain.entities.Question;
 import org.youcode.itlens.survey.domain.repository.AnswerRepository;
-import org.youcode.itlens.survey.domain.repository.QuestionRepository;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -21,20 +20,30 @@ import java.util.stream.Collectors;
 @Validated
 public class SurveyParticipationServiceImpl implements SurveyParticipationService {
 
-    //    private final QuestionService questionService;
-//    private final AnswerService answerService;
-    private final QuestionRepository questionRepository;
+    private final QuestionService questionService;
     private final AnswerRepository answerRepository;
 
     @Override
     public void participate(String surveyId, SurveyParticipationRequest request) {
-//        request.responses().forEach(responseDTO -> {
-//            Question question = findQuestion(responseDTO.questionId());
-//            processResponse(responseDTO, question);
-//        });
+        request.responses().forEach(responseDTO -> {
+            Long questionId = extractQuestionId(responseDTO);
+            QuestionResponseDto question = findQuestionById(questionId) ;
+            processResponse(responseDTO, question);
+        });
     }
 
-    private void processResponse(ResponseDTO responseDTO, Question question) {
+    private Long extractQuestionId(ResponseDTO responseDTO) {
+        if (responseDTO instanceof SingleAnswerResponseDTO singleAnswer) {
+            return singleAnswer.questionId();
+        } else if (responseDTO instanceof MultipleAnswersResponseDTO multipleAnswer) {
+            return multipleAnswer.questionId();
+        } else if (responseDTO instanceof RangeAnswerResponseDTO rangeAnswer) {
+            return rangeAnswer.questionId();
+        }
+        throw new IllegalArgumentException("Unknown response type: " + responseDTO.getClass());
+    }
+
+    private void processResponse(ResponseDTO responseDTO, QuestionResponseDto question) {
         if (responseDTO instanceof SingleAnswerResponseDTO singleAnswer) {
             saveSingleAnswerResponse(singleAnswer);
         } else if (responseDTO instanceof MultipleAnswersResponseDTO multipleAnswer) {
@@ -45,42 +54,51 @@ public class SurveyParticipationServiceImpl implements SurveyParticipationServic
     }
 
     private void saveSingleAnswerResponse(SingleAnswerResponseDTO responseDTO) {
-        Answer answer = findAnswer(responseDTO.answerId());
-        answer.incrementSelectionCount();
-        answerRepository.save(answer);
+        Answer answer = findAnswerById(responseDTO.answerId());
+        incrementAndSaveAnswer(answer);
     }
 
     private void saveMultipleAnswersResponse(MultipleAnswersResponseDTO responseDTO) {
         List<Answer> answers = answerRepository.findAllById(responseDTO.answersId());
-        if (answers.size() != responseDTO.answersId().size()) {
-            throw new EntityNotFoundException("One or more answers not found for the provided IDs.");
-        }
-        answers.forEach(Answer::incrementSelectionCount);
-        answerRepository.saveAll(answers);
+        validateAnswersExist(answers, responseDTO.answersId());
+        answers.forEach(this::incrementAndSaveAnswer);
     }
 
     private void saveRangeAnswerResponse(RangeAnswerResponseDTO responseDTO) {
         String[] rangeParts = responseDTO.answerRange().split("-");
-        if (rangeParts.length != 2) {
-            throw new EntityNotFoundException("Invalid range format: " + responseDTO.answerRange());
-        }
+        validateRangeFormat(rangeParts);
 
         long startId = Long.parseLong(rangeParts[0]);
         long endId = Long.parseLong(rangeParts[1]);
 
         List<Answer> answers = answerRepository.findAllByIdInRange(startId, endId);
-        answers.forEach(Answer::incrementSelectionCount);
-        answerRepository.saveAll(answers);
+        answers.forEach(this::incrementAndSaveAnswer);
     }
 
-    private Question findQuestion(Long questionId) {
-        return questionRepository.findById(questionId)
-                .orElseThrow(() -> new EntityNotFoundException("Question " + questionId + " not found"));
+    private void incrementAndSaveAnswer(Answer answer) {
+        answer.incrementSelectionCount();
+        answerRepository.save(answer);
     }
 
-    private Answer findAnswer(Long answerId) {
+    private void validateAnswersExist(List<Answer> answers, List<Long> answerIds) {
+        if (answers.size() != answerIds.size()) {
+            throw new EntityNotFoundException("One or more answers not found for the provided IDs.");
+        }
+    }
+
+    private void validateRangeFormat(String[] rangeParts) {
+        if (rangeParts.length != 2) {
+            throw new EntityNotFoundException("Invalid range format.");
+        }
+    }
+
+    private QuestionResponseDto findQuestionById(Long questionId) {
+        return questionService.getById(questionId);
+    }
+
+    private Answer findAnswerById(Long answerId) {
         return answerRepository.findById(answerId)
-                .orElseThrow(() -> new EntityNotFoundException("Answer " + answerId + " not found"));
+                .orElseThrow(() -> new EntityNotFoundException("No answer found for ID: " + answerId));
     }
 
 }
