@@ -28,10 +28,10 @@ public class SurveyParticipationServiceImpl implements SurveyParticipationServic
 
     @Override
     public void participate(String surveyId, SurveyParticipationRequest request) {
-        request.responses().forEach(responseDTO -> {
-
-//            processResponse(responseDTO);
-        });
+//        request.responses().forEach(responseDTO -> {
+//            Question question = findQuestion(responseDTO.questionId());
+//            processResponse(responseDTO, question);
+//        });
     }
 
     private void processResponse(ResponseDTO responseDTO, Question question) {
@@ -45,31 +45,21 @@ public class SurveyParticipationServiceImpl implements SurveyParticipationServic
     }
 
     private void saveSingleAnswerResponse(SingleAnswerResponseDTO responseDTO) {
-        Question question = questionRepository.findById(responseDTO.questionId())
-                .orElseThrow(() -> new EntityNotFoundException("Question " + responseDTO.questionId() + " not found"));
-        Answer answer = answerRepository.findById(responseDTO.answerId())
-                .orElseThrow(() -> new EntityNotFoundException("Answer " + responseDTO.answerId() + " not found"));
+        Answer answer = findAnswer(responseDTO.answerId());
         answer.incrementSelectionCount();
         answerRepository.save(answer);
     }
 
     private void saveMultipleAnswersResponse(MultipleAnswersResponseDTO responseDTO) {
-        Question question = questionRepository.findById(responseDTO.questionId())
-                .orElseThrow(() -> new EntityNotFoundException("Question " + responseDTO.questionId() + " not found"));
-
-        responseDTO.answersId().forEach(answerId -> {
-            List<Answer> answers = answerRepository.findAllById(responseDTO.answersId())
-                    .stream()
-                    .peek(Answer::incrementSelectionCount)
-                    .collect(Collectors.toList());
-            answerRepository.saveAll(answers);
-        });
+        List<Answer> answers = answerRepository.findAllById(responseDTO.answersId());
+        if (answers.size() != responseDTO.answersId().size()) {
+            throw new EntityNotFoundException("One or more answers not found for the provided IDs.");
+        }
+        answers.forEach(Answer::incrementSelectionCount);
+        answerRepository.saveAll(answers);
     }
 
     private void saveRangeAnswerResponse(RangeAnswerResponseDTO responseDTO) {
-        Question question = questionRepository.findById(responseDTO.questionId())
-                .orElseThrow(() -> new EntityNotFoundException("Question with Id " + responseDTO.questionId() + " not found"));
-
         String[] rangeParts = responseDTO.answerRange().split("-");
         if (rangeParts.length != 2) {
             throw new EntityNotFoundException("Invalid range format: " + responseDTO.answerRange());
@@ -78,10 +68,8 @@ public class SurveyParticipationServiceImpl implements SurveyParticipationServic
         long startId = Long.parseLong(rangeParts[0]);
         long endId = Long.parseLong(rangeParts[1]);
 
-        List<Answer> answers = answerRepository.findAllByIdInRange(startId, endId)
-                .stream()
-                .peek(Answer::incrementSelectionCount)
-                .toList();
+        List<Answer> answers = answerRepository.findAllByIdInRange(startId, endId);
+        answers.forEach(Answer::incrementSelectionCount);
         answerRepository.saveAll(answers);
     }
 
