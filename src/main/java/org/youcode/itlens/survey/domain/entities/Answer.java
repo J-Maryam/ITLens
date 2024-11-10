@@ -18,7 +18,7 @@ public class Answer {
 
     private String text;
 
-    private Integer selectionCount;
+    private Integer selectionCount = 0;
 
     @ManyToOne(cascade = CascadeType.ALL)
     private Question question;

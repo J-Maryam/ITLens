@@ -12,9 +12,11 @@ import org.youcode.itlens.survey.application.service.QuestionService;
 import org.youcode.itlens.survey.application.service.SurveyEditionService;
 import org.youcode.itlens.survey.application.service.SurveyParticipationService;
 import org.youcode.itlens.survey.domain.entities.Answer;
+import org.youcode.itlens.survey.domain.entities.Question;
 import org.youcode.itlens.survey.domain.entities.SurveyEdition;
 import org.youcode.itlens.survey.domain.entities.enums.QuestionType;
 import org.youcode.itlens.survey.domain.repository.AnswerRepository;
+import org.youcode.itlens.survey.domain.repository.QuestionRepository;
 import org.youcode.itlens.survey.domain.repository.SurveyEditionRepository;
 
 import java.time.LocalDate;
@@ -29,6 +31,7 @@ public class SurveyParticipationServiceImpl implements SurveyParticipationServic
     private final QuestionService questionService;
     private final AnswerRepository answerRepository;
     private final SurveyEditionService surveyEditionService;
+    private final QuestionRepository questionRepository;
 
     @Override
     public void participate(Long surveyEditionId, SurveyParticipationRequest request) {
@@ -108,8 +111,18 @@ public class SurveyParticipationServiceImpl implements SurveyParticipationServic
     }
 
     private void incrementAndSaveAnswer(Answer answer) {
+        if (answer.getSelectionCount() == null) {
+            answer.setSelectionCount(0);
+        }
+
         answer.incrementSelectionCount();
         answerRepository.save(answer);
+
+        Question question = answer.getQuestion();
+        if (question != null) {
+            question.setAnswerCount(question.getAnswerCount() + 1);
+            questionRepository.save(question);
+        }
     }
 
     private void validateAnswersExist(List<Answer> answers, List<Long> answerIds) {
