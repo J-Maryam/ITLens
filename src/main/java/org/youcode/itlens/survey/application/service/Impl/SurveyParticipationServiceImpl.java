@@ -12,6 +12,9 @@ import org.youcode.itlens.survey.domain.entities.Question;
 import org.youcode.itlens.survey.domain.repository.AnswerRepository;
 import org.youcode.itlens.survey.domain.repository.QuestionRepository;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -71,15 +74,14 @@ public class SurveyParticipationServiceImpl implements SurveyParticipationServic
             throw new EntityNotFoundException("Invalid range format: " + responseDTO.answerRange());
         }
 
-        int startId = Integer.parseInt(rangeParts[0]);
-        int endId = Integer.parseInt(rangeParts[1]);
+        long startId = Long.parseLong(rangeParts[0]);
+        long endId = Long.parseLong(rangeParts[1]);
 
-        for (int answerId = startId; answerId <= endId; answerId++) {
-            Answer answer = answerRepository.findById((long) answerId)
-                    .orElseThrow(() -> new EntityNotFoundException("Answer not found"));
-            answer.incrementSelectionCount();
-            answerRepository.save(answer);
-        }
+        List<Answer> answers = answerRepository.findAllByIdInRange(startId, endId)
+                .stream()
+                .peek(Answer::incrementSelectionCount)
+                .toList();
+        answerRepository.saveAll(answers);
     }
 
     }
