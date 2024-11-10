@@ -90,6 +90,9 @@ public class SurveyParticipationServiceImpl implements SurveyParticipationServic
                 .orElseThrow(() -> new EntityNotFoundException("Question " + questionId + " not found"));
     }
 
-
+    private Answer findAnswer(Long answerId) {
+        return answerRepository.findById(answerId)
+                .orElseThrow(() -> new EntityNotFoundException("Answer " + answerId + " not found"));
+    }
 
 }
