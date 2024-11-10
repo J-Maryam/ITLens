@@ -58,10 +58,11 @@ public class SurveyParticipationServiceImpl implements SurveyParticipationServic
                 .orElseThrow(() -> new EntityNotFoundException("Question " + responseDTO.questionId() + " not found"));
 
         responseDTO.answersId().forEach(answerId -> {
-            Answer answer = answerRepository.findById(answerId)
-                    .orElseThrow(() -> new EntityNotFoundException("Answer " + answerId + " not found"));
-            answer.incrementSelectionCount();
-            answerRepository.save(answer);
+            List<Answer> answers = answerRepository.findAllById(responseDTO.answersId())
+                    .stream()
+                    .peek(Answer::incrementSelectionCount)
+                    .collect(Collectors.toList());
+            answerRepository.saveAll(answers);
         });
     }
 
