@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 @Validated
 public class SurveyParticipationServiceImpl implements SurveyParticipationService {
 
-//    private final QuestionService questionService;
+    //    private final QuestionService questionService;
 //    private final AnswerService answerService;
     private final QuestionRepository questionRepository;
     private final AnswerRepository answerRepository;
@@ -37,9 +37,9 @@ public class SurveyParticipationServiceImpl implements SurveyParticipationServic
     private void processResponse(ResponseDTO responseDTO, Question question) {
         if (responseDTO instanceof SingleAnswerResponseDTO singleAnswer) {
             saveSingleAnswerResponse(singleAnswer);
-        }else if (responseDTO instanceof MultipleAnswersResponseDTO multipleAnswer) {
+        } else if (responseDTO instanceof MultipleAnswersResponseDTO multipleAnswer) {
             saveMultipleAnswersResponse(multipleAnswer);
-        }else if (responseDTO instanceof RangeAnswerResponseDTO rangeAnswer) {
+        } else if (responseDTO instanceof RangeAnswerResponseDTO rangeAnswer) {
             saveRangeAnswerResponse(rangeAnswer);
         }
     }
@@ -85,4 +85,11 @@ public class SurveyParticipationServiceImpl implements SurveyParticipationServic
         answerRepository.saveAll(answers);
     }
 
+    private Question findQuestion(Long questionId) {
+        return questionRepository.findById(questionId)
+                .orElseThrow(() -> new EntityNotFoundException("Question " + questionId + " not found"));
     }
+
+
+
+}
