@@ -31,7 +31,13 @@ public class SurveyParticipationServiceImpl implements SurveyParticipationServic
 
     @Override
     public void participate(String surveyId, SurveyParticipationRequest request) {
-
+        request.responses().forEach(responseDTO -> {
+            if (responseDTO instanceof SingleAnswerResponseDTO singleAnswer) {
+                saveSingleAnswerResponse(singleAnswer);
+            }else if (responseDTO instanceof MultipleAnswersResponseDTO multipleAnswer) {
+                saveMultipleAnswersResponse(multipleAnswer);
+            }
+        });
     }
 
     private void saveSingleAnswerResponse(SingleAnswerResponseDTO responseDTO) {
