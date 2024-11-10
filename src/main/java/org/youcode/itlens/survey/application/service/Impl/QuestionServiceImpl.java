@@ -1,6 +1,5 @@
 package org.youcode.itlens.survey.application.service.Impl;
 
-import jakarta.persistence.EntityExistsException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,7 +10,6 @@ import org.youcode.itlens.survey.application.dto.request.QuestionRequestDto;
 import org.youcode.itlens.survey.application.dto.response.QuestionResponseDto;
 import org.youcode.itlens.survey.application.mapper.QuestionMapper;
 import org.youcode.itlens.survey.application.service.QuestionService;
-import org.youcode.itlens.survey.application.service.SubjectService;
 import org.youcode.itlens.survey.domain.entities.Question;
 import org.youcode.itlens.survey.domain.entities.Subject;
 import org.youcode.itlens.survey.domain.repository.QuestionRepository;

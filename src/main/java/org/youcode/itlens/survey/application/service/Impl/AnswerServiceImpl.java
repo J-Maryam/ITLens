@@ -1,4 +1,4 @@
-package org.youcode.itlens.survey.application.service.impl;
+package org.youcode.itlens.survey.application.service.Impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

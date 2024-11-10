@@ -9,7 +9,6 @@ import org.youcode.itlens.survey.application.dto.request.SurveyEditionRequestDto
 import org.youcode.itlens.survey.application.dto.response.SurveyEditionResponseDto;
 import org.youcode.itlens.survey.application.mapper.SurveyEditionMapper;
 import org.youcode.itlens.survey.application.service.SurveyEditionService;
-import org.youcode.itlens.survey.application.service.SurveyService;
 import org.youcode.itlens.survey.domain.entities.Survey;
 import org.youcode.itlens.survey.domain.entities.SurveyEdition;
 import org.youcode.itlens.survey.domain.repository.SurveyEditionRepository;

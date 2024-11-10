@@ -13,11 +13,9 @@ import org.youcode.itlens.survey.application.service.SurveyEditionService;
 import org.youcode.itlens.survey.application.service.SurveyParticipationService;
 import org.youcode.itlens.survey.domain.entities.Answer;
 import org.youcode.itlens.survey.domain.entities.Question;
-import org.youcode.itlens.survey.domain.entities.SurveyEdition;
 import org.youcode.itlens.survey.domain.entities.enums.QuestionType;
 import org.youcode.itlens.survey.domain.repository.AnswerRepository;
 import org.youcode.itlens.survey.domain.repository.QuestionRepository;
-import org.youcode.itlens.survey.domain.repository.SurveyEditionRepository;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -114,7 +112,6 @@ public class SurveyParticipationServiceImpl implements SurveyParticipationServic
         if (answer.getSelectionCount() == null) {
             answer.setSelectionCount(0);
         }
-
         answer.incrementSelectionCount();
         answerRepository.save(answer);
 
