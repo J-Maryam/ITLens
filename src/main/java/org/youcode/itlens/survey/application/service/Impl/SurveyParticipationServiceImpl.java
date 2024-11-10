@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.youcode.itlens.common.domain.exception.EntityNotFoundException;
+import org.youcode.itlens.survey.application.dto.request.answerResponse.MultipleAnswersResponseDTO;
 import org.youcode.itlens.survey.application.dto.request.answerResponse.SingleAnswerResponseDTO;
 import org.youcode.itlens.survey.application.dto.request.answerResponse.SurveyParticipationRequest;
 import org.youcode.itlens.survey.application.dto.response.AnswerResponseDto;
@@ -35,10 +36,22 @@ public class SurveyParticipationServiceImpl implements SurveyParticipationServic
 
     private void saveSingleAnswerResponse(SingleAnswerResponseDTO responseDTO) {
         Question question = questionRepository.findById(responseDTO.questionId())
-                .orElseThrow(() -> new EntityNotFoundException("Question not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Question " + responseDTO.questionId() + " not found"));
         Answer answer = answerRepository.findById(responseDTO.answerId())
-                .orElseThrow(() -> new EntityNotFoundException("Answer not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Answer " + responseDTO.answerId() + " not found"));
         answer.incrementSelectionCount();
         answerRepository.save(answer);
+    }
+
+    private void saveMultipleAnswersResponse(MultipleAnswersResponseDTO responseDTO) {
+        Question question = questionRepository.findById(responseDTO.questionId())
+                .orElseThrow(() -> new EntityNotFoundException("Question " + responseDTO.questionId() + " not found"));
+
+        responseDTO.answersId().forEach(answerId -> {
+            Answer answer = answerRepository.findById(answerId)
+                    .orElseThrow(() -> new EntityNotFoundException("Answer " + answerId + " not found"));
+            answer.incrementSelectionCount();
+            answerRepository.save(answer);
+        });
     }
 }
