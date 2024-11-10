@@ -5,13 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.youcode.itlens.common.domain.exception.EntityNotFoundException;
-import org.youcode.itlens.survey.application.dto.request.answerResponse.MultipleAnswersResponseDTO;
-import org.youcode.itlens.survey.application.dto.request.answerResponse.SingleAnswerResponseDTO;
-import org.youcode.itlens.survey.application.dto.request.answerResponse.SurveyParticipationRequest;
-import org.youcode.itlens.survey.application.dto.response.AnswerResponseDto;
-import org.youcode.itlens.survey.application.dto.response.QuestionResponseDto;
-import org.youcode.itlens.survey.application.service.AnswerService;
-import org.youcode.itlens.survey.application.service.QuestionService;
+import org.youcode.itlens.survey.application.dto.request.answerResponse.*;
 import org.youcode.itlens.survey.application.service.SurveyParticipationService;
 import org.youcode.itlens.survey.domain.entities.Answer;
 import org.youcode.itlens.survey.domain.entities.Question;
@@ -32,13 +26,12 @@ public class SurveyParticipationServiceImpl implements SurveyParticipationServic
     @Override
     public void participate(String surveyId, SurveyParticipationRequest request) {
         request.responses().forEach(responseDTO -> {
-            if (responseDTO instanceof SingleAnswerResponseDTO singleAnswer) {
-                saveSingleAnswerResponse(singleAnswer);
-            }else if (responseDTO instanceof MultipleAnswersResponseDTO multipleAnswer) {
-                saveMultipleAnswersResponse(multipleAnswer);
-            }
+
+//            processResponse(responseDTO);
         });
     }
+
+
 
     private void saveSingleAnswerResponse(SingleAnswerResponseDTO responseDTO) {
         Question question = questionRepository.findById(responseDTO.questionId())
@@ -60,4 +53,25 @@ public class SurveyParticipationServiceImpl implements SurveyParticipationServic
             answerRepository.save(answer);
         });
     }
-}
+
+    private void saveRangeAnswerResponse(RangeAnswerResponseDTO responseDTO) {
+        Question question = questionRepository.findById(responseDTO.questionId())
+                .orElseThrow(() -> new EntityNotFoundException("Question with Id " + responseDTO.questionId() + " not found"));
+
+        String[] rangeParts = responseDTO.answerRange().split("-");
+        if (rangeParts.length != 2) {
+            throw new EntityNotFoundException("Invalid range format: " + responseDTO.answerRange());
+        }
+
+        int startId = Integer.parseInt(rangeParts[0]);
+        int endId = Integer.parseInt(rangeParts[1]);
+
+        for (int answerId = startId; answerId <= endId; answerId++) {
+            Answer answer = answerRepository.findById((long) answerId)
+                    .orElseThrow(() -> new EntityNotFoundException("Answer not found"));
+            answer.incrementSelectionCount();
+            answerRepository.save(answer);
+        }
+    }
+
+    }
