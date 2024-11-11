@@ -5,6 +5,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.youcode.itlens.common.application.dto.PagedResponse;
 import org.youcode.itlens.common.domain.exception.EntityNotFoundException;
 import org.youcode.itlens.owner.application.dto.OwnerRequestDTO;
 import org.youcode.itlens.owner.application.dto.OwnerResponseDTO;
@@ -30,20 +33,21 @@ public class OwnerServiceImplTest {
     @InjectMocks
     private OwnerServiceImpl service;
 
-//    @Test
-//    void getAll_ShouldReturnListOfOwnerResponseDTO() {
-//        Owner owner = new Owner();
-//        OwnerResponseDTO ownerResponseDTO = new OwnerResponseDTO(1L, "Test Owner", List.of());
-//        when(repository.findAll()).thenReturn(List.of(owner));
-//        when(mapper.toDto(owner)).thenReturn(ownerResponseDTO);
-//
-//        List<OwnerResponseDTO> result = service.getAll();
-//
-//        assertEquals(1, result.size());
-//        assertEquals("Test Owner", result.get(0).name());
-//        verify(repository, times(1)).findAll();
-//        verify(mapper, times(1)).toDto(owner);
-//    }
+    @Test
+    void getAll_ShouldReturnPagedResponse() {
+        Owner owner = new Owner();
+        OwnerResponseDTO ownerResponseDTO = new OwnerResponseDTO(1L, "Test Owner", List.of());
+
+        when(repository.findAll(any(Pageable.class))).thenReturn(new PageImpl<>(List.of(owner)));
+        when(mapper.toDto(owner)).thenReturn(ownerResponseDTO);
+
+        PagedResponse<OwnerResponseDTO> result = service.getAll(Pageable.unpaged());
+
+        assertEquals(1, result.content().size());
+        assertEquals("Test Owner", result.content().get(0).name());
+        verify(repository, times(1)).findAll(any(Pageable.class));
+        verify(mapper, times(1)).toDto(owner);
+    }
 
     @Test
     void getById_ShouldReturnOwnerResponseDTO_WhenOwnerExists() {
