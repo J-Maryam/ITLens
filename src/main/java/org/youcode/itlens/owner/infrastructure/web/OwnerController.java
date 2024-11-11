@@ -2,6 +2,8 @@ package org.youcode.itlens.owner.infrastructure.web;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,8 +20,12 @@ public class OwnerController {
     private final OwnerService service;
 
     @GetMapping
-    public ResponseEntity<List<OwnerResponseDTO>> findAll() {
-        List<OwnerResponseDTO> owners = service.getAll();
+    public ResponseEntity<List<OwnerResponseDTO>> findAll(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "3") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        List<OwnerResponseDTO> owners = service.getAll(pageable);
         return ResponseEntity.ok(owners);
     }
 

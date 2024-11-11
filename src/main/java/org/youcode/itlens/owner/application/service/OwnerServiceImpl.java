@@ -1,6 +1,7 @@
 package org.youcode.itlens.owner.application.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -23,8 +24,8 @@ public class OwnerServiceImpl implements OwnerService {
     private final OwnerMapper mapper;
 
     @Override
-    public List<OwnerResponseDTO> getAll() {
-        return repository.findAll().stream().map(mapper::toDto).toList();
+    public List<OwnerResponseDTO> getAll(Pageable pageable) {
+        return repository.findAll(pageable).stream().map(mapper::toDto).toList();
     }
 
     @Override

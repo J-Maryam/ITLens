@@ -1,6 +1,7 @@
 package org.youcode.itlens.survey.application.service.Impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -27,8 +28,8 @@ public class SurveyEditionServiceImpl implements SurveyEditionService {
     private final SurveyRepository surveyRepository;
 
     @Override
-    public List<SurveyEditionResponseDto> getAll() {
-        return repository.findAll().stream()
+    public List<SurveyEditionResponseDto> getAll(Pageable pageable) {
+        return repository.findAll(pageable).stream()
                 .map(mapper::toDto)
                 .toList();
     }

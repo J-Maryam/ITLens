@@ -2,6 +2,8 @@ package org.youcode.itlens.survey.infrastructure.web;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.youcode.itlens.survey.application.dto.request.QuestionRequestDto;
@@ -17,8 +19,12 @@ public class QuestionController {
     private final QuestionService service;
 
     @GetMapping
-    public ResponseEntity<List<QuestionResponseDto>> getAllQuestions() {
-        List<QuestionResponseDto> questions = service.getAll();
+    public ResponseEntity<List<QuestionResponseDto>> getAllQuestions(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "3") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        List<QuestionResponseDto> questions = service.getAll(pageable);
         return ResponseEntity.ok(questions);
     }
 

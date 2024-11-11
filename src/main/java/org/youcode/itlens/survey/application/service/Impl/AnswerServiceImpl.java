@@ -1,10 +1,12 @@
 package org.youcode.itlens.survey.application.service.Impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
+import org.youcode.itlens.common.application.dto.PagedResponse;
 import org.youcode.itlens.common.domain.exception.EntityNotFoundException;
 import org.youcode.itlens.survey.application.dto.request.AnswerRequestDto;
 import org.youcode.itlens.survey.application.dto.response.AnswerResponseDto;
@@ -27,11 +29,17 @@ public class AnswerServiceImpl implements AnswerService {
     private final AnswerMapper mapper;
 
     @Override
-    public List<AnswerResponseDto> getAll() {
-        return repository.findAll()
-                .stream()
-                .map(mapper::toDto)
-                .toList();
+    public PagedResponse<AnswerResponseDto> getAll(Pageable pageable) {
+        Page<Answer> answerPage = repository.findAll(pageable);
+        List<AnswerResponseDto> answers = answerPage.getContent().stream().map(mapper::toDto).toList();
+        return new PagedResponse<>(
+                answers,
+                answerPage.getNumber(),
+                answerPage.getSize(),
+                answerPage.getTotalElements(),
+                answerPage.getTotalPages(),
+                answerPage.isLast()
+        );
     }
 
     @Override

@@ -1,6 +1,7 @@
 package org.youcode.itlens.survey.application.service.Impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -28,8 +29,8 @@ public class SubjectServiceImpl implements SubjectService {
     private final SubjectMapper mapper;
 
     @Override
-    public List<SubjectResponseDto> getAll() {
-        return repository.findAll()
+    public List<SubjectResponseDto> getAll(Pageable pageable) {
+        return repository.findAll(pageable)
                 .stream().map(mapper::toDto)
                 .toList();
     }

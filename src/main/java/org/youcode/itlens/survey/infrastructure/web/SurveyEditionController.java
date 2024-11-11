@@ -2,6 +2,8 @@ package org.youcode.itlens.survey.infrastructure.web;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,8 +22,12 @@ public class SurveyEditionController {
     private final SurveyEditionService service;
 
     @GetMapping
-    public ResponseEntity<List<SurveyEditionResponseDto>> findAll() {
-        List<SurveyEditionResponseDto> surveyEditions = service.getAll();
+    public ResponseEntity<List<SurveyEditionResponseDto>> findAll(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "3") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        List<SurveyEditionResponseDto> surveyEditions = service.getAll(pageable);
         return ResponseEntity.ok(surveyEditions);
     }
 

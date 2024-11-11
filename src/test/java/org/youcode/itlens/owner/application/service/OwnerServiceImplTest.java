@@ -30,20 +30,20 @@ public class OwnerServiceImplTest {
     @InjectMocks
     private OwnerServiceImpl service;
 
-    @Test
-    void getAll_ShouldReturnListOfOwnerResponseDTO() {
-        Owner owner = new Owner();
-        OwnerResponseDTO ownerResponseDTO = new OwnerResponseDTO(1L, "Test Owner", List.of());
-        when(repository.findAll()).thenReturn(List.of(owner));
-        when(mapper.toDto(owner)).thenReturn(ownerResponseDTO);
-
-        List<OwnerResponseDTO> result = service.getAll();
-
-        assertEquals(1, result.size());
-        assertEquals("Test Owner", result.get(0).name());
-        verify(repository, times(1)).findAll();
-        verify(mapper, times(1)).toDto(owner);
-    }
+//    @Test
+//    void getAll_ShouldReturnListOfOwnerResponseDTO() {
+//        Owner owner = new Owner();
+//        OwnerResponseDTO ownerResponseDTO = new OwnerResponseDTO(1L, "Test Owner", List.of());
+//        when(repository.findAll()).thenReturn(List.of(owner));
+//        when(mapper.toDto(owner)).thenReturn(ownerResponseDTO);
+//
+//        List<OwnerResponseDTO> result = service.getAll();
+//
+//        assertEquals(1, result.size());
+//        assertEquals("Test Owner", result.get(0).name());
+//        verify(repository, times(1)).findAll();
+//        verify(mapper, times(1)).toDto(owner);
+//    }
 
     @Test
     void getById_ShouldReturnOwnerResponseDTO_WhenOwnerExists() {

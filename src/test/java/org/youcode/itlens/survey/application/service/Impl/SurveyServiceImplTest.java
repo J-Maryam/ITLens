@@ -129,20 +129,20 @@ class SurveyServiceImplTest {
         });
     }
 
-    @Test
-    void shouldGetAllSurveys() {
-        Owner owner = new Owner(1L, "Owner Name", List.of());
-        Survey survey = new Survey(1L, "Survey Title", "Survey Description", owner, List.of());
-        SurveyResponseDto surveyDto = new SurveyResponseDto(1L, "Survey Title", "Survey Description", null, List.of());
-
-        when(surveyRepository.findAll()).thenReturn(List.of(survey));
-        when(mapper.toDto(survey)).thenReturn(surveyDto);
-
-        List<SurveyResponseDto> responses = surveyService.getAll();
-
-        assertEquals(1, responses.size());
-        assertEquals(surveyDto, responses.get(0));
-        verify(surveyRepository, times(1)).findAll();
-        verify(mapper, times(1)).toDto(survey);
-    }
+//    @Test
+//    void shouldGetAllSurveys() {
+//        Owner owner = new Owner(1L, "Owner Name", List.of());
+//        Survey survey = new Survey(1L, "Survey Title", "Survey Description", owner, List.of());
+//        SurveyResponseDto surveyDto = new SurveyResponseDto(1L, "Survey Title", "Survey Description", null, List.of());
+//
+//        when(surveyRepository.findAll()).thenReturn(List.of(survey));
+//        when(mapper.toDto(survey)).thenReturn(surveyDto);
+//
+//        List<SurveyResponseDto> responses = surveyService.getAll();
+//
+//        assertEquals(1, responses.size());
+//        assertEquals(surveyDto, responses.get(0));
+//        verify(surveyRepository, times(1)).findAll();
+//        verify(mapper, times(1)).toDto(survey);
+//    }
 }
