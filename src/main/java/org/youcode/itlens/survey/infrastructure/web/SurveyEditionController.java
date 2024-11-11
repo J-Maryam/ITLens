@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.youcode.itlens.common.application.dto.PagedResponse;
 import org.youcode.itlens.common.application.validation.annotation.Exists;
 import org.youcode.itlens.survey.application.dto.request.SurveyEditionRequestDto;
 import org.youcode.itlens.survey.application.dto.response.SurveyEditionResponseDto;
@@ -22,12 +23,12 @@ public class SurveyEditionController {
     private final SurveyEditionService service;
 
     @GetMapping
-    public ResponseEntity<List<SurveyEditionResponseDto>> findAll(
+    public ResponseEntity<PagedResponse<SurveyEditionResponseDto>> findAll(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "3") int size
     ) {
         Pageable pageable = PageRequest.of(page, size);
-        List<SurveyEditionResponseDto> surveyEditions = service.getAll(pageable);
+        PagedResponse<SurveyEditionResponseDto> surveyEditions = service.getAll(pageable);
         return ResponseEntity.ok(surveyEditions);
     }
 

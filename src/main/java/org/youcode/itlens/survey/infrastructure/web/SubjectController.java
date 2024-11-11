@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.youcode.itlens.common.application.dto.PagedResponse;
 import org.youcode.itlens.survey.application.dto.request.SubjectRequestDto;
 import org.youcode.itlens.survey.application.dto.request.SurveyRequestDto;
 import org.youcode.itlens.survey.application.dto.response.SubjectResponseDto;
@@ -29,18 +30,23 @@ public class SubjectController {
     }
 
     @GetMapping("/subjects")
-    public ResponseEntity<List<SubjectResponseDto>> findAll(
+    public ResponseEntity<PagedResponse<SubjectResponseDto>> findAll(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "3") int size
     ) {
         Pageable pageable = PageRequest.of(page, size);
-        List<SubjectResponseDto> surveys = service.getAll(pageable);
+        PagedResponse<SubjectResponseDto> surveys = service.getAll(pageable);
         return ResponseEntity.ok(surveys);
     }
 
     @GetMapping("/survey-editions/{surveyEditionId}/subjects")
-    public ResponseEntity<List<SubjectResponseDto>> getAllSubjectsBySurveyEdition(@PathVariable Long surveyEditionId) {
-        List<SubjectResponseDto> subjects = service.findAllBySurveyEdition(surveyEditionId);
+    public ResponseEntity<PagedResponse<SubjectResponseDto>> getAllSubjectsBySurveyEdition(
+            @PathVariable Long surveyEditionId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "3") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        PagedResponse<SubjectResponseDto> subjects = service.findAllBySurveyEdition(surveyEditionId, pageable);
         return ResponseEntity.ok(subjects);
     }
 

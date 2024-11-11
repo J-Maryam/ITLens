@@ -1,10 +1,12 @@
 package org.youcode.itlens.survey.application.service.Impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
+import org.youcode.itlens.common.application.dto.PagedResponse;
 import org.youcode.itlens.common.domain.exception.ConflictException;
 import org.youcode.itlens.common.domain.exception.EntityNotFoundException;
 import org.youcode.itlens.owner.domain.Owner;
@@ -29,10 +31,17 @@ public class SurveyServiceImpl implements SurveyService {
     private final SurveyMapper mapper;
 
     @Override
-    public List<SurveyResponseDto> getAll(Pageable pageable) {
-        return repository.findAll(pageable)
-                .stream().map(mapper::toDto)
-                .toList();
+    public PagedResponse<SurveyResponseDto> getAll(Pageable pageable) {
+        Page<Survey> surveyPage = repository.findAll(pageable);
+        List<SurveyResponseDto> surveys = surveyPage.getContent().stream().map(mapper::toDto).toList();
+        return new PagedResponse<>(
+                surveys,
+                surveyPage.getNumber(),
+                surveyPage.getSize(),
+                surveyPage.getTotalElements(),
+                surveyPage.getTotalPages(),
+                surveyPage.isLast()
+        );
     }
 
     @Override

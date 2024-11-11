@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.youcode.itlens.common.application.dto.PagedResponse;
 import org.youcode.itlens.survey.application.dto.request.QuestionRequestDto;
 import org.youcode.itlens.survey.application.dto.response.QuestionResponseDto;
 import org.youcode.itlens.survey.application.service.QuestionService;
@@ -19,12 +20,12 @@ public class QuestionController {
     private final QuestionService service;
 
     @GetMapping
-    public ResponseEntity<List<QuestionResponseDto>> getAllQuestions(
+    public ResponseEntity<PagedResponse<QuestionResponseDto>> getAllQuestions(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "3") int size
     ) {
         Pageable pageable = PageRequest.of(page, size);
-        List<QuestionResponseDto> questions = service.getAll(pageable);
+        PagedResponse<QuestionResponseDto> questions = service.getAll(pageable);
         return ResponseEntity.ok(questions);
     }
 

@@ -1,10 +1,12 @@
 package org.youcode.itlens.survey.application.service.Impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
+import org.youcode.itlens.common.application.dto.PagedResponse;
 import org.youcode.itlens.common.domain.exception.EntityNotFoundException;
 import org.youcode.itlens.survey.application.dto.request.SurveyEditionRequestDto;
 import org.youcode.itlens.survey.application.dto.response.SurveyEditionResponseDto;
@@ -28,10 +30,17 @@ public class SurveyEditionServiceImpl implements SurveyEditionService {
     private final SurveyRepository surveyRepository;
 
     @Override
-    public List<SurveyEditionResponseDto> getAll(Pageable pageable) {
-        return repository.findAll(pageable).stream()
-                .map(mapper::toDto)
-                .toList();
+    public PagedResponse<SurveyEditionResponseDto> getAll(Pageable pageable) {
+        Page<SurveyEdition> surveyEditionPage = repository.findAll(pageable);
+        List<SurveyEditionResponseDto> surveyEditions = surveyEditionPage.getContent().stream().map(mapper::toDto).toList();
+        return new PagedResponse<>(
+                surveyEditions,
+                surveyEditionPage.getNumber(),
+                surveyEditionPage.getSize(),
+                surveyEditionPage.getTotalElements(),
+                surveyEditionPage.getTotalPages(),
+                surveyEditionPage.isLast()
+        );
     }
 
     @Override

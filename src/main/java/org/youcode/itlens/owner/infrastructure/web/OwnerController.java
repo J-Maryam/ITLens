@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.youcode.itlens.common.application.dto.PagedResponse;
 import org.youcode.itlens.owner.application.dto.OwnerRequestDTO;
 import org.youcode.itlens.owner.application.dto.OwnerResponseDTO;
 import org.youcode.itlens.owner.application.service.OwnerService;
@@ -20,12 +21,12 @@ public class OwnerController {
     private final OwnerService service;
 
     @GetMapping
-    public ResponseEntity<List<OwnerResponseDTO>> findAll(
+    public ResponseEntity<PagedResponse<OwnerResponseDTO>> findAll(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "3") int size
     ) {
         Pageable pageable = PageRequest.of(page, size);
-        List<OwnerResponseDTO> owners = service.getAll(pageable);
+        PagedResponse<OwnerResponseDTO> owners = service.getAll(pageable);
         return ResponseEntity.ok(owners);
     }
 

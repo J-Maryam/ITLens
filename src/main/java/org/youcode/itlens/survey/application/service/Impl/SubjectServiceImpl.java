@@ -1,10 +1,12 @@
 package org.youcode.itlens.survey.application.service.Impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
+import org.youcode.itlens.common.application.dto.PagedResponse;
 import org.youcode.itlens.common.domain.exception.EntityCreationException;
 import org.youcode.itlens.common.domain.exception.EntityNotFoundException;
 import org.youcode.itlens.survey.application.dto.request.SubjectRequestDto;
@@ -29,20 +31,33 @@ public class SubjectServiceImpl implements SubjectService {
     private final SubjectMapper mapper;
 
     @Override
-    public List<SubjectResponseDto> getAll(Pageable pageable) {
-        return repository.findAll(pageable)
-                .stream().map(mapper::toDto)
-                .toList();
+    public PagedResponse<SubjectResponseDto> getAll(Pageable pageable) {
+        Page<Subject> subjectPage = repository.findAll(pageable);
+        List<SubjectResponseDto> subjects = subjectPage.getContent().stream().map(mapper::toDto).toList();
+        return new PagedResponse<>(
+                subjects,
+                subjectPage.getNumber(),
+                subjectPage.getSize(),
+                subjectPage.getTotalElements(),
+                subjectPage.getTotalPages(),
+                subjectPage.isLast()
+        );
     }
 
-    public List<SubjectResponseDto> findAllBySurveyEdition(Long surveyEditionId) {
+    public PagedResponse<SubjectResponseDto> findAllBySurveyEdition(Long surveyEditionId, Pageable pageable) {
         if (!surveyEditionRepository.existsById(surveyEditionId))
             throw new EntityNotFoundException("SurveyEdition with Id " + surveyEditionId + " not found");
 
-        List<Subject> subjects = repository.findAllBySurveyEditionId(surveyEditionId);
-        return subjects.stream()
-                .map(mapper::toDto)
-                .toList();
+        Page<Subject> subjectPage = repository.findAllBySurveyEditionId(surveyEditionId, pageable);
+        List<SubjectResponseDto> subjects = subjectPage.getContent().stream().map(mapper::toDto).toList();
+        return new PagedResponse<>(
+                subjects,
+                subjectPage.getNumber(),
+                subjectPage.getSize(),
+                subjectPage.getTotalElements(),
+                subjectPage.getTotalPages(),
+                subjectPage.isLast()
+        );
     }
 
     @Override
