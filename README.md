@@ -142,7 +142,8 @@ La documentation de l'API est générée avec **Swagger**, permettant de visuali
 
 1. **Accès à Swagger** : Une fois l'application démarrée, accédez à la documentation Swagger à l’adresse suivante :
    ```
-   http://localhost:8080/swagger-ui/index.html
+   http://localhost:8080/swagger-ui.html
+)
    ```
 
 2. **Fonctionnalités de Swagger** : Tous les endpoints sont documentés, avec des exemples de requêtes et des descriptions des paramètres et réponses.
