@@ -1,16 +1,14 @@
 package org.youcode.itlens.survey.application.dto.response;
 
-import org.youcode.itlens.survey.application.dto.embeddable.AnswerEmbeddableDto;
-
-import java.time.Year;
 import java.util.List;
 
 public record SurveyEditionResultResponseDTO(
         String surveyTitle,
         String description,
-        Year year,
+        int year,
         List<ChapterResultDTO> chapters
 ) {
+
     public record ChapterResultDTO(
             String title,
             List<ChapterResultDTO> subChapters,
@@ -18,8 +16,13 @@ public record SurveyEditionResultResponseDTO(
     ) {}
 
     public record QuestionResultDTO(
-            String text,
-            List<AnswerEmbeddableDto> answers,
+            String questionText,
+            List<AnswerDTO> answers,
             int totalAnswers
+    ) {}
+
+    public record AnswerDTO(
+            String answerText,
+            int count
     ) {}
 }

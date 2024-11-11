@@ -6,7 +6,7 @@ public record SurveyEditionEmbeddableDto(
         Long id,
         LocalDate creationDate,
         LocalDate startDate,
-        int year,
-        SurveyEmbeddableDto survey
+        int year
+//        SurveyEmbeddableDto survey
 ) {
 }
