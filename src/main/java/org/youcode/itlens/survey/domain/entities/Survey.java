@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import lombok.experimental.Accessors;
+import org.youcode.itlens.common.application.validation.annotation.UniqueValue;
 import org.youcode.itlens.owner.domain.Owner;
 
 import java.util.List;
@@ -21,6 +22,7 @@ public class Survey {
 
     @NotBlank
     @Column(unique = true)
+    @UniqueValue(entityClass = Survey.class, fieldName = "title", message = "survey already exists (should be unique), try another title")
     private String title;
 
     @NotBlank

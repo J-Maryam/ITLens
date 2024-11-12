@@ -23,7 +23,7 @@ public class Owner {
     private Long id;
 
     @NotBlank
-    @UniqueValue(entityClass = Owner.class, fieldName = "name")
+    @UniqueValue(entityClass = Owner.class, fieldName = "name", message = "name already exists (should be unique), try another name")
     @Column(unique=true, nullable=false)
     private String name;
 
