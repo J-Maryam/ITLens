@@ -5,6 +5,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.youcode.itlens.common.domain.exception.EntityNotFoundException;
 import org.youcode.itlens.owner.domain.Owner;
 import org.youcode.itlens.owner.domain.OwnerRepository;
@@ -40,13 +44,11 @@ class SurveyServiceImplTest {
     @Test
     void shouldCreateSurveySuccessfully() {
         Owner owner = new Owner(1L, "Owner Name", List.of());
-
         SurveyRequestDto request = new SurveyRequestDto("Survey Title", "Survey Description", owner.getId());
-
         Survey survey = new Survey(1L, "Survey Title", "Survey Description", owner, List.of());
-
         SurveyResponseDto expectedResponse = new SurveyResponseDto(1L, "Survey Title", "Survey Description", null, List.of());
 
+        when(ownerRepository.findById(owner.getId())).thenReturn(Optional.of(owner));
         when(mapper.toEntity(request)).thenReturn(survey);
         when(surveyRepository.save(any(Survey.class))).thenReturn(survey);
         when(mapper.toDto(survey)).thenReturn(expectedResponse);
@@ -57,6 +59,7 @@ class SurveyServiceImplTest {
         verify(surveyRepository, times(1)).save(any(Survey.class));
         verify(mapper, times(1)).toEntity(request);
         verify(mapper, times(1)).toDto(survey);
+        verify(ownerRepository, times(1)).findById(owner.getId());
     }
 
     @Test
@@ -104,7 +107,7 @@ class SurveyServiceImplTest {
 
         assertEquals(expectedResponse, response);
         verify(surveyRepository, times(1)).findById(surveyId);
-        verify(surveyRepository, times(1)).save(updatedSurvey);
+        verify(surveyRepository, times(1)).save(any(Survey.class));
         verify(mapper, times(1)).toDto(updatedSurvey);
         verify(ownerRepository, times(1)).findById(owner.getId());
     }
@@ -129,20 +132,23 @@ class SurveyServiceImplTest {
         });
     }
 
-//    @Test
-//    void shouldGetAllSurveys() {
-//        Owner owner = new Owner(1L, "Owner Name", List.of());
-//        Survey survey = new Survey(1L, "Survey Title", "Survey Description", owner, List.of());
-//        SurveyResponseDto surveyDto = new SurveyResponseDto(1L, "Survey Title", "Survey Description", null, List.of());
-//
-//        when(surveyRepository.findAll()).thenReturn(List.of(survey));
-//        when(mapper.toDto(survey)).thenReturn(surveyDto);
-//
-//        List<SurveyResponseDto> responses = surveyService.getAll();
-//
-//        assertEquals(1, responses.size());
-//        assertEquals(surveyDto, responses.get(0));
-//        verify(surveyRepository, times(1)).findAll();
-//        verify(mapper, times(1)).toDto(survey);
-//    }
+    @Test
+    void shouldGetAllSurveysPaged() {
+        Owner owner = new Owner(1L, "Owner Name", List.of());
+        Survey survey = new Survey(1L, "Survey Title", "Survey Description", owner, List.of());
+        SurveyResponseDto surveyDto = new SurveyResponseDto(1L, "Survey Title", "Survey Description", null, List.of());
+
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Survey> surveyPage = new PageImpl<>(List.of(survey), pageable, 1);
+
+        when(surveyRepository.findAll(pageable)).thenReturn(surveyPage);
+        when(mapper.toDto(survey)).thenReturn(surveyDto);
+
+        var response = surveyService.getAll(pageable);
+
+        assertEquals(1, response.content().size());
+        assertEquals(surveyDto, response.content().get(0));
+        verify(surveyRepository, times(1)).findAll(pageable);
+        verify(mapper, times(1)).toDto(survey);
+    }
 }
